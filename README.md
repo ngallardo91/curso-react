@@ -21,7 +21,7 @@ Cada carpeta contiene:
 * Un proyecto base para resolver
 * Un archivo `README.md` con las consignas
 
-## 🪜 Pasos para trabajar en los ejercicios
+## Pasos para trabajar en los ejercicios
 
 1. **Clonar este repositorio** en tu computadora:
 
@@ -65,6 +65,4 @@ Cada carpeta contiene:
 * Leé siempre el `README.md` dentro de cada carpeta antes de comenzar.
 * Si lo necesitás, podés crear archivos adicionales para pruebas.
 
-
-📚 *Curso de React + TypeScript - Ejercicios prácticos*
 
