@@ -19,7 +19,7 @@ type ProductStore = {
 export const useProductStore = create<ProductStore>()(
   devtools(
     persist(
-      (set) => ({
+      (set, get) => ({
         products: [],
         loading: false,
         fetchProducts: async () => {
@@ -29,11 +29,25 @@ export const useProductStore = create<ProductStore>()(
         },
         clearProducts: () => set({ products: [] }),
         updateProduct: (id: number, updates: Partial<Product>) => {
+
+          const product = get().products.find((p) => p.id === id);
+          if (!product) return;
+
+          const updatedProduct = { ...product, ...updates };
+
+          const updatedProducts = get().products.map((p) =>
+            p.id === id ? updatedProduct : p
+          );
+
+          set({ products: updatedProducts });
+
+          /**
           set((state) => ({
             products: state.products.map((product) =>
               product.id === id ? { ...product, ...updates } : product
             ),
           }));
+          */
         },
       }),
       {
