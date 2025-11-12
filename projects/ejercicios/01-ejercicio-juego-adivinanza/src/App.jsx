@@ -31,7 +31,7 @@ function Juego({ maximo }) {
           type="number"
           min="1"
           max={maximo}
-          placeholder="Ingresa un número del 1 al 10"
+          placeholder={'Ingresa un número del 1 al ${maximo}'}
         />
         <button type="button">Adivinar</button>
       </form>
@@ -45,11 +45,13 @@ function Juego({ maximo }) {
 }
 
 function App() {
+  const maximo = 11;
+
   return (
     <div className="App">
       <Header />
-      <Juego maximo={10} />
-      <footer>¡Intenta adivinar el número entre 1 y 10!</footer>
+      <Juego maximo={maximo} />
+      <footer>¡Intenta adivinar el número entre 1 y {maximo}!</footer>
     </div>
   );
 }
