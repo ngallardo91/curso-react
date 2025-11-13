@@ -26,7 +26,7 @@ function Juego({ maximo }) {
 
   const [numeroJugador, setNumeroJugador] = useState();
   const [numeroMaquina, setNumeroMaquina] = useState(Math.floor(Math.random() * maximo) + 1);
-  const [resultado, setResultado] = useState("");
+  const [resultado, setResultado] = useState("¡A jugar!");
   const [esCorrecto, setEsCorrecto] = useState(false);
 
   const handleSubmit = (e) => {
