@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 
 function Header() {
@@ -23,23 +24,47 @@ function Juego({ maximo }) {
   // - Si no => mostrar mensaje de error
   // - Siempre generar un nuevo número aleatorio con Math.floor(Math.random() * maximo) + 1
 
+  const [numeroJugador, setNumeroJugador] = useState();
+  const [numeroMaquina, setNumeroMaquina] = useState(Math.floor(Math.random() * maximo) + 1);
+  const [resultado, setResultado] = useState("");
+  const [esCorrecto, setEsCorrecto] = useState(false);
+
+  const handleSubmit = (e) => {
+        e.preventDefault();
+        if(numeroJugador == numeroMaquina){
+          setResultado("Adivinaste!")
+          setEsCorrecto(true)
+          setNumeroMaquina(Math.floor(Math.random() * maximo) + 1)
+          console.log("Adivinaste!")
+        }
+        else {
+          setResultado("No Adivinaste!")
+          setEsCorrecto(false)
+          console.log("No Adivinaste!")
+        }
+    }
+
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         {/* TODO: Input controlado para ingresar el número */}
         <input
           type="number"
           min="1"
           max={maximo}
           placeholder={'Ingresa un número del 1 al ${maximo}'}
+          onChange={(e) => setNumeroJugador(e.target.value)}
         />
-        <button type="button">Adivinar</button>
+        <button type="submit">Adivinar</button>
       </form>
 
       {/* TODO: Mostrar el resultado con una clase dinámica si adivinó */}
-      <div className="resultado">
+      <div className={esCorrecto ? "resultado ganador" : "resultado"}>
         {/* Mostrar el mensaje del resultado aquí */}
+        <h3>{resultado}</h3>
       </div>
+      <p>El usuario seleccionó el número: {numeroJugador}</p>
+      <p>La máquina seleccionó el número: {numeroMaquina}</p>
     </div>
   );
 }
