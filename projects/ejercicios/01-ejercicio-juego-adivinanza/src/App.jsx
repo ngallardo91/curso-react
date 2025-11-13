@@ -44,6 +44,14 @@ function Juego({ maximo }) {
         }
     }
 
+  const handleReset = () => {
+    setResultado("¡A jugar!")
+    setEsCorrecto(false)
+    setNumeroMaquina(Math.floor(Math.random() * maximo) + 1)
+    console.log("¡A jugar!")
+    setContadorIntentos(0)
+  }
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -65,6 +73,15 @@ function Juego({ maximo }) {
       </div>
       <p>El usuario seleccionó el número: {numeroJugador}</p>
       <p>La máquina seleccionó el número: {numeroMaquina}</p>
+      <ButtonReset onReset={handleReset}></ButtonReset>
+    </div>
+  );
+}
+
+function ButtonReset({ onReset }) {
+  return (
+    <div>
+      <button type="button" onClick = { onReset } >Reiniciar</button>
     </div>
   );
 }
