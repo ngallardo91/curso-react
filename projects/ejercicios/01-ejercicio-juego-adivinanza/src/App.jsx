@@ -28,6 +28,7 @@ function Juego({ maximo }) {
   const [numeroMaquina, setNumeroMaquina] = useState(Math.floor(Math.random() * maximo) + 1);
   const [resultado, setResultado] = useState("¡A jugar!");
   const [esCorrecto, setEsCorrecto] = useState(false);
+  const [contadorIntentos, setContadorIntentos] = useState(0);
 
   const handleSubmit = (e) => {
         e.preventDefault();
@@ -42,6 +43,7 @@ function Juego({ maximo }) {
           setEsCorrecto(false)
           console.log("No Adivinaste!")
         }
+        setContadorIntentos(contadorIntentos + 1)
     }
 
   const handleReset = () => {
@@ -73,6 +75,7 @@ function Juego({ maximo }) {
       </div>
       <p>El usuario seleccionó el número: {numeroJugador}</p>
       <p>La máquina seleccionó el número: {numeroMaquina}</p>
+      <p>Contador de Intentos: {contadorIntentos}</p>
       <ButtonReset onReset={handleReset}></ButtonReset>
     </div>
   );
