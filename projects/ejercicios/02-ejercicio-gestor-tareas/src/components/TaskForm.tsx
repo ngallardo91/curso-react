@@ -23,8 +23,13 @@ export function TaskForm({ onAddTask }: Props) {
         placeholder="Título de la tarea"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        style={{ marginRight: 10 }}
       />
-      <select value={priority} onChange={(e) => setPriority(e.target.value as "baja" | "media" | "alta")}>
+      <select
+        value={priority}
+        onChange={(e) => setPriority(e.target.value as "baja" | "media" | "alta")}
+        style={{ marginRight: 10 }}
+      >
         <option value="baja">Baja</option>
         <option value="media">Media</option>
         <option value="alta">Alta</option>
