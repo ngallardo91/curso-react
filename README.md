@@ -23,19 +23,19 @@ Cada carpeta contiene:
 
 ## Pasos para trabajar en los ejercicios
 
-1. **Haz un fork del repositorio
+1. **Haz un fork del repositorio**
 
 - Entra a: [ngallardo91/curso-react](https://github.com/ngallardo91/curso-react)
 - Haz clic en el botón **Fork** (arriba a la derecha)
 - Esto creará una copia del repositorio en tu cuenta de GitHub
   
-2. **Clona tu fork a tu computadora
+2. **Clona tu fork a tu computadora**
 
-```bash
-git clone https://github.com/TU_USUARIO/curso-react.git
-cd curso-react
-```
-Cambia `TU_USUARIO` por tu nombre de usuario en GitHub.
+  ```bash
+  git clone https://github.com/TU_USUARIO/curso-react.git
+  cd curso-react
+  ```
+  Cambia `TU_USUARIO` por tu nombre de usuario en GitHub.
 
 3. **Ingresar al repositorio:**
 
@@ -43,9 +43,7 @@ Cambia `TU_USUARIO` por tu nombre de usuario en GitHub.
    cd nombre-del-repositorio
    ```
 
-4. Dentro de la carpeta `/ejercicios`, elegí el ejercicio que vas a resolver.
-
-5. **Crear una rama nueva** con tu nombre siguiendo la convención:
+4. **Crear una rama nueva** con tu nombre siguiendo la convención:
 
    ```
    /<primera_letra_nombre><apellido>
@@ -57,22 +55,22 @@ Cambia `TU_USUARIO` por tu nombre de usuario en GitHub.
    git checkout -b /ngallardo
    ```
 
-6. **Realizar los cambios** o resolver el ejercicio dentro de su carpeta.
+5. **Realizar los cambios** o resolver el ejercicio dentro de su carpeta.
 
-7. **Subir tu rama a tu fork:**
+6. **Subir tu rama a tu fork:**
 
    ```bash
    git add .
    git commit -m "Resolución del ejercicio"
    git push origin /ngallardo
    ```
-8. **Abre un Pull Request
+8. **Abre un Pull Request**
 
-1. Ve a la página de tu fork en GitHub.
-2. Te aparecerá un botón **Compare & pull request**. Haz clic.
-3. Asegúrate de que la rama de destino sea `main` del repositorio original.
-4. Escribe una descripción clara de tus cambios.
-5. Envía el Pull Request para revisión.
+  1. Ve a la página de tu fork en GitHub.
+  2. Te aparecerá un botón **Compare & pull request**. Haz clic.
+  3. Asegúrate de que la rama de destino sea `main` del repositorio original.
+  4. Escribe una descripción clara de tus cambios.
+  5. Envía el Pull Request para revisión.
 
 ## ✅ Recomendaciones
 
