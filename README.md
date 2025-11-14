@@ -23,19 +23,25 @@ Cada carpeta contiene:
 
 ## Pasos para trabajar en los ejercicios
 
-1. **Clonar este repositorio** en tu computadora:
+1. **Haz un fork del repositorio**
 
-   ```bash
-   git clone <URL_DEL_REPOSITORIO>
-   ```
+- Entra a: [ngallardo91/curso-react](https://github.com/ngallardo91/curso-react)
+- Haz clic en el botón **Fork** (arriba a la derecha)
+- Esto creará una copia del repositorio en tu cuenta de GitHub
+  
+2. **Clona tu fork a tu computadora**
 
-2. **Ingresar al repositorio:**
+  ```bash
+  git clone https://github.com/TU_USUARIO/curso-react.git
+  cd curso-react
+  ```
+  Cambia `TU_USUARIO` por tu nombre de usuario en GitHub.
+
+3. **Ingresar al repositorio:**
 
    ```bash
    cd nombre-del-repositorio
    ```
-
-3. Dentro de la carpeta `/ejercicios`, elegí el ejercicio que vas a resolver.
 
 4. **Crear una rama nueva** con tu nombre siguiendo la convención:
 
@@ -51,17 +57,23 @@ Cada carpeta contiene:
 
 5. **Realizar los cambios** o resolver el ejercicio dentro de su carpeta.
 
-6. **Subir tu rama al repositorio remoto:**
+6. **Subir tu rama a tu fork:**
 
    ```bash
    git add .
    git commit -m "Resolución del ejercicio"
    git push origin /ngallardo
    ```
+7. **Abre un Pull Request**
+   
+  - Ve a la página de tu fork en GitHub.
+  - Te aparecerá un botón **Compare & pull request**. Haz clic.
+  - Asegúrate de que la rama de destino sea `main` del repositorio original.
+  - Escribe una descripción clara de tus cambios.
+  - Envía el Pull Request para revisión.
 
 ## ✅ Recomendaciones
 
-* No modificar el código base de otros ejercicios.
 * Leé siempre el `README.md` dentro de cada carpeta antes de comenzar.
 * Si lo necesitás, podés crear archivos adicionales para pruebas.
 
