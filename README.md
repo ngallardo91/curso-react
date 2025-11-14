@@ -64,13 +64,13 @@ Cada carpeta contiene:
    git commit -m "Resolución del ejercicio"
    git push origin /ngallardo
    ```
-8. **Abre un Pull Request**
-
-  1. Ve a la página de tu fork en GitHub.
-  2. Te aparecerá un botón **Compare & pull request**. Haz clic.
-  3. Asegúrate de que la rama de destino sea `main` del repositorio original.
-  4. Escribe una descripción clara de tus cambios.
-  5. Envía el Pull Request para revisión.
+7. **Abre un Pull Request**
+   
+  - Ve a la página de tu fork en GitHub.
+  - Te aparecerá un botón **Compare & pull request**. Haz clic.
+  - Asegúrate de que la rama de destino sea `main` del repositorio original.
+  - Escribe una descripción clara de tus cambios.
+  - Envía el Pull Request para revisión.
 
 ## ✅ Recomendaciones
 
