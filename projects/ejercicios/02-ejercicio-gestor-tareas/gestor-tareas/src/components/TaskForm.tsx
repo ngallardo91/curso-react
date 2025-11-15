@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { TaskPriority } from "../types/task"
+import type{ TaskPriority } from "../types/task"
 
 type Props = {
   addTask: (title: string, priority: TaskPriority) => void
@@ -37,4 +37,3 @@ function TaskForm({ addTask }: Props) {
 }
 
 export default TaskForm
-
