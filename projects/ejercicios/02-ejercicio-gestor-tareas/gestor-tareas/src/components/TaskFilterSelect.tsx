@@ -1,4 +1,4 @@
-import { TaskFilter } from "../types/task"
+import type{ TaskFilter } from "../types/task"
 
 type Props = {
   value: TaskFilter

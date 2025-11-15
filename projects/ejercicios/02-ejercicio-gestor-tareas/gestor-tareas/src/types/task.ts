@@ -8,4 +8,3 @@ export type Task = {
   priority: TaskPriority
   completed: boolean
 }
-

@@ -1,4 +1,4 @@
-import { Task } from "../types/task"
+import type { Task } from "../types/task"
 
 type Props = {
   tasks: Task[]
@@ -19,4 +19,3 @@ function TaskCounter({ tasks }: Props) {
 }
 
 export default TaskCounter
-

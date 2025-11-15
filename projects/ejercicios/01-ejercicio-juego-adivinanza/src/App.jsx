@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 
 function Header() {
@@ -9,38 +10,72 @@ function Header() {
 }
 
 function Juego({ maximo }) {
-  // TODO: Crear estados con useState para:
-  // - numeroJugador (el número que ingresa el jugador)
-  // - numeroMaquina (el número aleatorio generado)
-  // - resultado (el mensaje de resultado)
-  // - esCorrecto (booleano para indicar si adivinó o no)
+  const [numeroJugador, setNumeroJugador] = useState('');
+  const [numeroMaquina, setNumeroMaquina] = useState(Math.floor(Math.random() * maximo) + 1);
+  const [resultado, setResultado] = useState('');
+  const [esCorrecto, setEsCorrecto] = useState(false);
+  const [intentos, setIntentos] = useState(0);
 
-  // TODO: Crear una función para manejar el cambio del input (actualizar numeroJugador)
-  // Pista: usa e.target.value y recuerda convertirlo a número.
+  const manejarCambio = (event) => {
+    setNumeroJugador(event.target.value);
+  };
 
-  // TODO: Crear una función para verificar el número
-  // - Si el número del jugador es igual al número aleatorio => mostrar mensaje de acierto
-  // - Si no => mostrar mensaje de error
-  // - Siempre generar un nuevo número aleatorio con Math.floor(Math.random() * maximo) + 1
+  const verificarNumero = () => {
+    const valor = Number(numeroJugador);
+
+    if (!valor || valor < 1 || valor > maximo) {
+      setResultado('Ingresa un numero entre 1 y ' + maximo);
+      setEsCorrecto(false);
+      return;
+    }
+
+    const nuevoNumero = Math.floor(Math.random() * maximo) + 1;
+    setNumeroMaquina(nuevoNumero);
+    setIntentos(intentos + 1);
+
+    if (valor === nuevoNumero) {
+      setResultado('Ganaste, el numero era ' + nuevoNumero);
+      setEsCorrecto(true);
+    } else {
+      setResultado('No es correcto, el numero era ' + nuevoNumero);
+      setEsCorrecto(false);
+    }
+  };
+
+  const reiniciarJuego = () => {
+    setNumeroJugador('');
+    setNumeroMaquina(Math.floor(Math.random() * maximo) + 1);
+    setResultado('');
+    setEsCorrecto(false);
+    setIntentos(0);
+  };
 
   return (
-    <div>
-      <form>
-        {/* TODO: Input controlado para ingresar el número */}
+    <main className="juego">
+      <div className="juego-contenido">
+        <p>Ingresa un numero del 1 al {maximo}</p>
+
         <input
           type="number"
           min="1"
           max={maximo}
-          placeholder="Ingresa un número del 1 al 10"
+          value={numeroJugador}
+          onChange={manejarCambio}
         />
-        <button type="button">Adivinar</button>
-      </form>
 
-      {/* TODO: Mostrar el resultado con una clase dinámica si adivinó */}
-      <div className="resultado">
-        {/* Mostrar el mensaje del resultado aquí */}
+        <button onClick={verificarNumero}>Probar</button>
+
+        {resultado && (
+          <p className={esCorrecto ? 'mensaje correcto' : 'mensaje incorrecto'}>
+            {resultado}
+          </p>
+        )}
+
+        <p>Intentos: {intentos}</p>
+
+        <button onClick={reiniciarJuego}>Reiniciar</button>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -49,10 +84,11 @@ function App() {
     <div className="App">
       <Header />
       <Juego maximo={10} />
-      <footer>¡Intenta adivinar el número entre 1 y 10!</footer>
+      <footer>Intenta adivinar el numero entre 1 y 10</footer>
     </div>
   );
 }
 
 export default App;
+
 
