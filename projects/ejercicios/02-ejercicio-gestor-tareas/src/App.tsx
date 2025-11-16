@@ -21,10 +21,14 @@ function App() {
 
   const toggleTask = (id: number) => {
     // TODO: cambiar el valor de completed de la tarea con ese id
+
+    setTasks(tasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
   };
 
   const addTask = (title: string, priority: "baja" | "media" | "alta") => {
     // TODO: agregar una nueva tarea con un id incremental
+
+    setTasks([...tasks, { id: tasks.length + 1, title, priority, completed: false }]);
   };
 
   const filteredTasks = tasks.filter((task) => {

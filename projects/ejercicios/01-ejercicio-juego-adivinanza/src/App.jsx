@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 
 function Header() {
@@ -15,13 +16,34 @@ function Juego({ maximo }) {
   // - resultado (el mensaje de resultado)
   // - esCorrecto (booleano para indicar si adivinó o no)
 
+  const [numeroJugador, setNumeroJugador] = useState('');
+  const [numeroMaquina, setNumeroMaquina] = useState(null);
+  const [resultado, setResultado] = useState('');
+
   // TODO: Crear una función para manejar el cambio del input (actualizar numeroJugador)
   // Pista: usa e.target.value y recuerda convertirlo a número.
+
+  const handleInput = (e) => {
+    console.log('entre')
+    setNumeroJugador(Number(e.target.value));
+  }
 
   // TODO: Crear una función para verificar el número
   // - Si el número del jugador es igual al número aleatorio => mostrar mensaje de acierto
   // - Si no => mostrar mensaje de error
   // - Siempre generar un nuevo número aleatorio con Math.floor(Math.random() * maximo) + 1
+
+  const verificarNumero = () => {
+    const nuevoNumero = Math.floor(Math.random() * maximo) + 1;
+    setNumeroMaquina(nuevoNumero);
+    if (numeroJugador === numeroMaquina) {
+      setResultado('¡Adivino correctamente!');
+    } else {
+      setResultado(`Incorrecto. El número era ${nuevoNumero}`);
+    }
+  }
+
+
 
   return (
     <div>
@@ -32,12 +54,17 @@ function Juego({ maximo }) {
           min="1"
           max={maximo}
           placeholder="Ingresa un número del 1 al 10"
+          value={numeroJugador}
+          onChange={handleInput}
         />
-        <button type="button">Adivinar</button>
+        <button type="button" onClick={verificarNumero}>
+          Verificar
+        </button>
       </form>
 
       {/* TODO: Mostrar el resultado con una clase dinámica si adivinó */}
       <div className="resultado">
+        {resultado}
         {/* Mostrar el mensaje del resultado aquí */}
       </div>
     </div>
