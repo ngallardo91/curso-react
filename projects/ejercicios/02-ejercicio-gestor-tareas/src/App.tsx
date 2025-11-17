@@ -20,18 +20,33 @@ function App() {
   };
 
   const toggleTask = (id: number) => {
-    // TODO: cambiar el valor de completed de la tarea con ese id
+    setTasks(x =>
+      x.map(task =>
+        task.id === id
+          ? { ...task, completed: !task.completed }
+          : task
+      )
+    );
   };
 
   const addTask = (title: string, priority: "baja" | "media" | "alta") => {
-    // TODO: agregar una nueva tarea con un id incremental
-  };
+    setTasks(x => [
+      ...x,
+      {
+        id: x.length === 0 ? 1 : Math.max(...x.map(t => t.id)) + 1,
+        title,
+        priority,
+        completed: false
+      }
+    ]
+  )};
 
   const filteredTasks = tasks.filter((task) => {
     if (filter === "completadas") return task.completed;
     if (filter === "pendientes") return !task.completed;
     return true;
   });
+  console.log("Tasks ==> ", tasks)
 
   return (
     <div style={{ padding: 20, maxWidth: 600, margin: "0 auto" }}>
