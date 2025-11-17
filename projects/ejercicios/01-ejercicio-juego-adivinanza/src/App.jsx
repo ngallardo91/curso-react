@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import './App.css';
 
 function Header() {
@@ -9,47 +10,112 @@ function Header() {
 }
 
 function Juego({ maximo }) {
-  // TODO: Crear estados con useState para:
-  // - numeroJugador (el número que ingresa el jugador)
-  // - numeroMaquina (el número aleatorio generado)
-  // - resultado (el mensaje de resultado)
-  // - esCorrecto (booleano para indicar si adivinó o no)
+  const [numeroJugador, setNumeroJugador] = useState('');
+  const [numeroMaquina, setNumeroMaquina] = useState(undefined);
+  const [resultado, setResultado] = useState('');
+  const [esCorrecto, setEsCorrecto] = useState(false);
+  const [error, setError] = useState('');
+  const [intentos, setIntentos] = useState(0);
+  const MAX_INTENTOS = 5;
 
-  // TODO: Crear una función para manejar el cambio del input (actualizar numeroJugador)
-  // Pista: usa e.target.value y recuerda convertirlo a número.
+  useEffect(() => {
+    if (numeroJugador && numeroMaquina) {
+      verifyNumber();
+    }
+  }, [numeroJugador, numeroMaquina]);
 
-  // TODO: Crear una función para verificar el número
-  // - Si el número del jugador es igual al número aleatorio => mostrar mensaje de acierto
-  // - Si no => mostrar mensaje de error
-  // - Siempre generar un nuevo número aleatorio con Math.floor(Math.random() * maximo) + 1
+  const onInputChange = (e) => {
+    setResultado('');
+    setError('');
+    setNumeroMaquina(undefined);
+
+    const value = parseInt(e.target.value);
+    setNumeroJugador(value);
+    if (value > maximo) {
+      setError('El numero ingresado no debe ser mayor a 10');
+    }
+  }
+
+  const handleSubmitClick = () => {
+    setIntentos(prev => prev + 1);
+    const randomNumber = Math.floor(Math.random() * maximo) + 1;
+    setNumeroMaquina(randomNumber)
+  }
+
+  const handleRebootClick = () => {
+    setResultado('');
+    setError('');
+    setIntentos(0);
+    setNumeroJugador('');
+    setNumeroMaquina(undefined);
+    setEsCorrecto(false);
+  }
+
+  const verifyNumber = () => {
+    setEsCorrecto(numeroJugador === numeroMaquina);
+    setResultado(
+      numeroJugador === numeroMaquina
+        ? '¡¡Ganaste!! 🎉🎉🎉'
+        : 'Lo numeros no coinciden 😢'
+    );
+  }
 
   return (
     <div>
       <form>
-        {/* TODO: Input controlado para ingresar el número */}
-        <input
-          type="number"
-          min="1"
-          max={maximo}
-          placeholder="Ingresa un número del 1 al 10"
-        />
-        <button type="button">Adivinar</button>
+        <div className="form-container">
+          <input
+            type="number"
+            min="1"
+            max={maximo}
+            placeholder={`Ingresa un número del 1 al ${maximo}`}
+            value={numeroJugador}
+            onChange={onInputChange}
+            style={{ flex: 1, marginRight: 10 }}
+            disabled={esCorrecto || intentos >= MAX_INTENTOS}
+          />
+          <button
+            type="button"
+            onClick={handleSubmitClick}
+            disabled={esCorrecto || error || !numeroJugador || intentos >= MAX_INTENTOS}
+          >
+            Adivinar
+          </button>
+        </div>
       </form>
 
-      {/* TODO: Mostrar el resultado con una clase dinámica si adivinó */}
       <div className="resultado">
-        {/* Mostrar el mensaje del resultado aquí */}
+        {resultado && <h2>{resultado}</h2>}
+        {error && <h2 style={{ color: 'red' }}>{error}</h2>}
+        {numeroJugador !== undefined && numeroMaquina !== undefined &&
+          <h4>{`Tu número: ${numeroJugador} - Número generado: ${numeroMaquina}`}</h4>
+        }
+      </div>
+
+      <div className="intentos-container">
+        <h3>{`Intentos: ${intentos}`}</h3>
+        {intentos >= MAX_INTENTOS && <h4>Superaste la cantidad maxima de intentos 🏁</h4>}
+        {(esCorrecto || intentos >= MAX_INTENTOS) &&
+          <button
+            type="button"
+            onClick={handleRebootClick}
+          >
+            Reiniciar
+          </button>
+        }
       </div>
     </div>
   );
 }
 
 function App() {
+  const MAX = 10;
+
   return (
     <div className="App">
       <Header />
-      <Juego maximo={10} />
-      <footer>¡Intenta adivinar el número entre 1 y 10!</footer>
+      <Juego maximo={MAX} />
+      <footer>{`¡Intenta adivinar el número entre 1 y ${MAX}!`}</footer>
     </div>
   );
 }

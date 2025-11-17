@@ -18,6 +18,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -46,12 +47,71 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+input {
+  padding: 0.6em 1em;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 1em;
+  font-family: inherit;
+  transition: border-color 0.25s, background-color 0.25s;
+}
+
+input::placeholder {
+  color: #888;
+}
+
+input:focus {
+  outline: none;
+  border-color: #646cff;
+  background-color: #222;
+}
+
+input:disabled {
+  cursor: not-allowed;
+}
+
+select {
+  padding: 0.6em 2.5em 0.6em 1em;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 1em;
+  font-family: inherit;
+  transition: border-color 0.25s, background-color 0.25s;
+  cursor: pointer;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: url("data:image/svg+xml;utf8,<svg fill='rgba(255,255,255,0.8)' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 1em center;
+  background-size: 1em;
+}
+
+select:focus {
+  outline: none;
+  border-color: #646cff;
+  background-color: #222;
+}
+
+select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 @media (prefers-color-scheme: light) {
@@ -59,10 +119,39 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
+  }
+
+  input {
+    background-color: #f9f9f9;
+    color: #213547;
+    border-color: #ccc;
+  }
+
+  input::placeholder {
+    color: #aaa;
+  }
+
+  input:focus {
+    border-color: #747bff;
+    background-color: #fff;
+  }
+
+  select {
+    background-color: #f9f9f9;
+    color: #213547;
+    border-color: #ccc;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='rgba(33,53,71,0.8)' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
+  }
+
+  select:focus {
+    border-color: #747bff;
+    background-color: #fff;
   }
 }
