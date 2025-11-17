@@ -1,8 +1,18 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
+}
+.App {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  margin-top: auto;
+  font-size: 20px;
 }
 
 .logo {
@@ -17,7 +27,30 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
+input {
+  width: 250px;
+  font-size: 16px;
+}
 
+.claseForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 300px;
+  justify-content: space-evenly;
+}
+.resultado {
+  margin-bottom: 20px;
+  font-size: 22px;
+  border-radius: 5px;
+}
+.resultado.correcto {
+  background-color: rgb(95, 95, 204);
+  color: aqua;
+}
+.resultado.incorrecto {
+  background-color: rgb(255, 115, 0);
+}
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
