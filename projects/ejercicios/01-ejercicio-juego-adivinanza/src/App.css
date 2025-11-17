@@ -40,3 +40,68 @@
 .read-the-docs {
   color: #888;
 }
+
+/* ---------------------------------------------------- */
+/* 1. Estilos Base (.resultado) - Para el estado normal o de fallo */
+/* (Utiliza colores neutrales o de advertencia) */
+/* ---------------------------------------------------- */
+.resultado {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif; /* Usar fuente moderna */
+    
+    /* Colores por defecto (Advertencia o neutral) */
+    border: 2px solid #fbbf24; /* Borde naranja (Advertencia) */
+    background-color: #fffbeb; /* Fondo amarillo muy claro */
+    color: #b45309; /* Texto marrón/naranja oscuro */
+    
+    /* Transición suave para todos los cambios de estilo */
+    transition: all 0.4s ease-in-out; 
+    transform: scale(1); /* Base para la animación de escala */
+}
+
+/* ---------------------------------------------------- */
+/* 2. Estilos Dinámicos (.resultado.ganador) - Éxito */
+/* ---------------------------------------------------- */
+/* Este selector se activa SOLO si el div tiene AMBAS clases: 
+   className="resultado ganador" */
+.resultado.ganador {
+    /* Colores de éxito (Verde) */
+    border-color: #10b981; /* Borde verde fuerte */
+    background-color: #d1fae5; /* Fondo verde muy claro */
+    color: #065f46; /* Texto verde oscuro */
+    
+    /* Efecto para resaltar la victoria */
+    transform: scale(1.05); /* Agranda el div ligeramente */
+    /* Sombra brillante verde para destacar */
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5); 
+    /* Aplica la animación de pulso */
+    animation: pulse-green 1.5s infinite; 
+}
+
+/* ---------------------------------------------------- */
+/* Estilo para el texto dentro del resultado */
+/* ---------------------------------------------------- */
+.resultado h3 {
+    font-size: 1.6em;
+    font-weight: 800;
+    margin: 0;
+}
+
+/* ---------------------------------------------------- */
+/* 3. Definición de la Animación de "Pulso" (Opcional) */
+/* ---------------------------------------------------- */
+@keyframes pulse-green {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
