@@ -25,6 +25,16 @@ function App() {
 
   const addTask = (title: string, priority: "baja" | "media" | "alta") => {
     // TODO: agregar una nueva tarea con un id incremental
+    const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+
+    const newTask: Task = {
+      id: newId,
+      title: title,
+      priority: priority,
+      completed: false,
+    };
+
+    setTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
   const filteredTasks = tasks.filter((task) => {
