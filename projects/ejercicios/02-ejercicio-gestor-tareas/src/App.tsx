@@ -21,6 +21,17 @@ function App() {
 
   const toggleTask = (id: number) => {
     // TODO: cambiar el valor de completed de la tarea con ese id
+    setTasks((prevTasks) => {
+      return prevTasks.map((task) => {
+        if (task.id === id) {
+          return {
+            ...task,
+            completed: !task.completed,
+          };
+        }
+        return task;
+      })
+    })
   };
 
   const addTask = (title: string, priority: "baja" | "media" | "alta") => {
