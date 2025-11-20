@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 
 function Header() {
@@ -9,37 +10,90 @@ function Header() {
 }
 
 function Juego({ maximo }) {
-  // TODO: Crear estados con useState para:
-  // - numeroJugador (el número que ingresa el jugador)
-  // - numeroMaquina (el número aleatorio generado)
-  // - resultado (el mensaje de resultado)
-  // - esCorrecto (booleano para indicar si adivinó o no)
+  
+  // ESTADOS
+  const [numeroMaquina, setNumeroMaquina] = useState(Math.floor(Math.random() * maximo) + 1);
+  const [numeroJugador, setNumeroJugador] = useState('');
+  const [resultado, setResultado] = useState('');
+  const [esCorrecto, setEsCorrecto] = useState(null);
+  const [intentos, setIntentos] = useState(0); // Arranca en 0
 
-  // TODO: Crear una función para manejar el cambio del input (actualizar numeroJugador)
-  // Pista: usa e.target.value y recuerda convertirlo a número.
+  const manejarCambio = (e) => {
+    setNumeroJugador(e.target.value);
+  };
 
-  // TODO: Crear una función para verificar el número
-  // - Si el número del jugador es igual al número aleatorio => mostrar mensaje de acierto
-  // - Si no => mostrar mensaje de error
-  // - Siempre generar un nuevo número aleatorio con Math.floor(Math.random() * maximo) + 1
+  // Botón reiniciar
+  const reiniciarJuego = () => {
+    setNumeroMaquina(Math.floor(Math.random() * maximo) + 1);
+    setNumeroJugador('');
+    setResultado('');
+    setEsCorrecto(null);
+    setIntentos(0);
+  };
+
+  const verificarNumero = () => {
+    const numeroIngresado = parseInt(numeroJugador);
+    
+    if (isNaN(numeroIngresado)) return;
+
+    // Calculamos los intentos actuales + el intento de ahora
+    const intentosTotales = intentos + 1;
+
+    if (numeroIngresado === numeroMaquina) {
+      // Mostrar mensaje de éxito con los intentos finales
+      setResultado(`¡Correcto! Era el ${numeroMaquina}. Te tomó ${intentosTotales} intentos.`);
+      setEsCorrecto(true);
+      
+      // Prepara siguiente partida 
+      setNumeroMaquina(Math.floor(Math.random() * maximo) + 1);
+      setIntentos(0); 
+      
+    } else {
+      // Si no es, aumenta el contador
+      setIntentos(intentosTotales);
+      setEsCorrecto(false);
+      
+      if (numeroIngresado < numeroMaquina) {
+        setResultado('¡Fallaste! El número secreto es MÁS ALTO.');
+      } else {
+        setResultado('¡Fallaste! El número secreto es MÁS BAJO.');
+      }
+    }
+    
+    setNumeroJugador('');
+  };
 
   return (
     <div>
+      <div className="tablero">
+        {/* Mostramos intentos actuales */}
+        <p>Intentos: <strong>{intentos}</strong></p>
+        <button type="button" onClick={reiniciarJuego} style={{marginLeft: '10px'}}>
+          🔄 Reiniciar
+        </button>
+      </div>
+      <hr />
+
       <form>
-        {/* TODO: Input controlado para ingresar el número */}
         <input
           type="number"
           min="1"
           max={maximo}
-          placeholder="Ingresa un número del 1 al 10"
+          placeholder={`Ingresa un número del 1 al ${maximo}`}
+          value={numeroJugador}
+          onChange={manejarCambio}
         />
-        <button type="button">Adivinar</button>
+        
+        <button type="button" onClick={verificarNumero}>
+          Adivinar
+        </button>
       </form>
 
-      {/* TODO: Mostrar el resultado con una clase dinámica si adivinó */}
-      <div className="resultado">
-        {/* Mostrar el mensaje del resultado aquí */}
-      </div>
+      {resultado && (
+        <div className={`resultado ${esCorrecto ? 'exito' : 'error'}`}>
+          {resultado}
+        </div>
+      )}
     </div>
   );
 }
@@ -55,4 +109,3 @@ function App() {
 }
 
 export default App;
-
