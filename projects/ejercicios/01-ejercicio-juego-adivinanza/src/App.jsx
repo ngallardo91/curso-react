@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 
 function Header() {
@@ -14,31 +15,76 @@ function Juego({ maximo }) {
   // - numeroMaquina (el número aleatorio generado)
   // - resultado (el mensaje de resultado)
   // - esCorrecto (booleano para indicar si adivinó o no)
+  const [numeroJugador, setNumeroJugador] = useState(0)
+  const [numeroMaquina, setNumeroMaquina] = useState(0)
+  const [resultado, setResultado] = useState("")
+  const [esCorrecto, setEsCorrecto] = useState(false)
 
-  // TODO: Crear una función para manejar el cambio del input (actualizar numeroJugador)
-  // Pista: usa e.target.value y recuerda convertirlo a número.
+  function onNumberChange(numero) {
+    const esValido = !Number.isNaN(numero) ? true : false;
 
-  // TODO: Crear una función para verificar el número
-  // - Si el número del jugador es igual al número aleatorio => mostrar mensaje de acierto
-  // - Si no => mostrar mensaje de error
-  // - Siempre generar un nuevo número aleatorio con Math.floor(Math.random() * maximo) + 1
+    if (esValido)
+      setNumeroJugador(Number(numero))
+
+    return esValido
+  }
+
+  function adivinar() {
+    const random = Math.floor(Math.random() * maximo) + 1;
+    setNumeroMaquina(random);
+    
+    console.log("Numero Jugador ==> ", numeroJugador)
+    console.log("Numero Maquina ==> ", random)
+
+    if (numeroJugador === random)
+    {
+      setResultado("Adivinaste el número que eligió la máquina")
+      setEsCorrecto(true)
+    }
+    else
+    {
+      setResultado(`Seguí participando, la máquina eligió ${random}`)
+      setEsCorrecto(false)
+    }
+  }
+
 
   return (
     <div>
-      <form>
-        {/* TODO: Input controlado para ingresar el número */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          adivinar();
+        }}
+      >
         <input
           type="number"
           min="1"
           max={maximo}
+          onKeyDown={(e) => {
+            if (["e", "E", "+", "-", ".", ","].includes(e.key)) {
+              e.preventDefault();
+            }
+          }}
+          onChange={(e) => {
+            const value = e.target.value;
+
+            if (/^\d*$/.test(value)) {
+              onNumberChange(value);
+            }
+          }}
           placeholder="Ingresa un número del 1 al 10"
         />
-        <button type="button">Adivinar</button>
+        <button 
+          type="button" 
+          onClick={adivinar} 
+        >
+          Adivinar
+        </button>
       </form>
 
-      {/* TODO: Mostrar el resultado con una clase dinámica si adivinó */}
-      <div className="resultado">
-        {/* Mostrar el mensaje del resultado aquí */}
+      <div className={`resultado ${esCorrecto ? "acierto" : "error"}`}>
+        {resultado}
       </div>
     </div>
   );
