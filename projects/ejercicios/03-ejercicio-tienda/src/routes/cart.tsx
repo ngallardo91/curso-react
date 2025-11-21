@@ -72,9 +72,12 @@ function CartComponent() {
               </span>
             </div>
           </div>
-          <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl">
+          <a
+            href="/checkout"
+            className="block w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-center"
+          >
             Proceder al Pago
-          </button>
+          </a>
         </div>
       </div>
     </div>

@@ -70,6 +70,7 @@ npm run dev
 -  Lista de productos con grid responsivo
 -  Carrito de compras funcional
 -  Lista de categorías
+-  **Checkout con formulario validado** - React Hook Form + Zod
 
 ## TAREAS A COMPLETAR
 
@@ -247,10 +248,46 @@ const sortedProducts = [...(filteredProducts || [])].sort((a, b) => {
 -  Componentes reutilizables
 -  Hooks personalizados
 -  Manejo de estados de loading y error
+-  Formularios con validaciones (React Hook Form + Zod)
 
 ---
 
-### **Tarea 8 (OPCIONAL): Mejorar los Estilos y Animaciones** 
+### **Tarea 8: Implementar Formulario de Registro con Validaciones** 
+
+**Archivos**: 
+- `src/routes/register/index.tsx` (crear)
+- `src/types/register.ts` (crear)
+
+**Descripción**: Crea un formulario de registro de usuario usando React Hook Form y Zod para validaciones, siguiendo el ejemplo del formulario de checkout.
+
+**Referencia**: Revisa `src/routes/checkout/index.tsx` y `src/types/checkout.ts` para ver cómo implementar formularios con validaciones.
+
+**Pasos**:
+
+1. **Crear el esquema de validación** (`src/types/register.ts`):
+
+2. **Crear el formulario** (`src/routes/register/index.tsx`):
+   - Usa `useForm` de React Hook Form
+   - Configura `zodResolver` con tu schema
+   - Implementa campos: username, email, password, confirmPassword
+   - Muestra errores de validación debajo de cada campo
+   - Agrega un checkbox "Acepto recibir novedades"
+
+3. **Agregar al navbar**:
+   - En `__root.tsx`, agrega un link a `/register`
+
+4. **BONUS**:
+   - Agrega validación de fortaleza de contraseña visual
+   - Implementa un indicador de campos completados
+   - Agrega confirmación visual al enviar
+
+**Recursos**:
+- [React Hook Form Docs](https://react-hook-form.com/)
+- [Zod Documentation](https://zod.dev/)
+
+---
+
+### **Tarea 9 (OPCIONAL): Mejorar los Estilos y Animaciones** 
 
 **Archivos**: Varios componentes + `src/index.css`
 
