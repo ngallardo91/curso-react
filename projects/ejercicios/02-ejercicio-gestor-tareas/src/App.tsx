@@ -1,19 +1,30 @@
-import { useState } from 'react'
-import './App.css'
-import { TaskList } from './components/TaskList'
-import { TaskForm } from './components/TaskForm'
-import { TaskFilter } from './components/TaskFilter'
-import { TaskCounter } from './components/TaskCounter'
-import type { Task } from './types/task'
+import { useState } from "react";
+import "./App.css";
+import { TaskList } from "./components/TaskList";
+import { TaskForm } from "./components/TaskForm";
+import { TaskFilter } from "./components/TaskFilter";
+import { TaskCounter } from "./components/TaskCounter";
+import type { Task } from "./types/task";
 
 function App() {
-
   const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, title: "Preparar presentación", priority: "alta", completed: false },
+    {
+      id: 1,
+      title: "Preparar presentación",
+      priority: "alta",
+      completed: false,
+    },
     { id: 2, title: "Revisar mails", priority: "media", completed: true },
   ]);
 
-  const [filter, setFilter] = useState<"todas" | "completadas" | "pendientes">("todas");
+  function generarNuevoId(lista: Task[]): number {
+    if (lista.length === 0) return 1;
+    return Math.max(...lista.map((t) => t.id)) + 1;
+  }
+
+  const [filter, setFilter] = useState<"todas" | "completadas" | "pendientes">(
+    "todas"
+  );
 
   const deleteTask = (id: number) => {
     setTasks(tasks.filter((t) => t.id !== id));
@@ -21,10 +32,20 @@ function App() {
 
   const toggleTask = (id: number) => {
     // TODO: cambiar el valor de completed de la tarea con ese id
+    setTasks(
+      tasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+    );
   };
 
   const addTask = (title: string, priority: "baja" | "media" | "alta") => {
     // TODO: agregar una nueva tarea con un id incremental
+    const newTask: Task = {
+      id: generarNuevoId(tasks),
+      title,
+      priority,
+      completed: false,
+    };
+    setTasks([...tasks, newTask]);
   };
 
   const filteredTasks = tasks.filter((task) => {
@@ -39,9 +60,13 @@ function App() {
       <TaskCounter tasks={tasks} />
       <TaskFilter filter={filter} setFilter={setFilter} />
       <TaskForm onAddTask={addTask} />
-      <TaskList tasks={filteredTasks} onDelete={deleteTask} onToggle={toggleTask} />
+      <TaskList
+        tasks={filteredTasks}
+        onDelete={deleteTask}
+        onToggle={toggleTask}
+      />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
