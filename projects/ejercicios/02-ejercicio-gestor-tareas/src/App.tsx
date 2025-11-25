@@ -20,11 +20,25 @@ function App() {
   };
 
   const toggleTask = (id: number) => {
-    // TODO: cambiar el valor de completed de la tarea con ese id
+    const tasksAux = [...tasks];
+    const task = tasksAux.find(t => t.id === id);
+    if(!task){
+      alert('La tarea no existe');
+      return;
+    }
+    task.completed = !task.completed;
+    setTasks(tasksAux);
   };
 
   const addTask = (title: string, priority: "baja" | "media" | "alta") => {
-    // TODO: agregar una nueva tarea con un id incremental
+    const nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
+    const newTask = {
+      id: nextId,
+      title: title,
+      priority: priority,
+      completed: false
+    };
+    setTasks(prev => [...prev, newTask]);
   };
 
   const filteredTasks = tasks.filter((task) => {
