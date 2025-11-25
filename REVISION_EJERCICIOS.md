@@ -117,7 +117,6 @@ Este documento contiene la revisión de los ejercicios entregados por los alumno
 - ✅ Manejo del input implementado
 - ✅ Verificación del número con `useEffect`
 - ⚠️ **Observación:** Usa `useEffect` para verificar, lo cual funciona pero es un patrón diferente
-- ⚠️ **Bug potencial:** La validación podría mejorarse para evitar comparaciones con valores vacíos
 - 🌟 **Extra:** Límite de intentos (MAX_INTENTOS = 5)
 - 🌟 **Extra:** Botón de reinicio
 - ✅ Buenos estilos CSS para inputs
@@ -133,7 +132,27 @@ Este documento contiene la revisión de los ejercicios entregados por los alumno
 
 ---
 
-### PR #7 - Javier Boero (jboero)
+### PR #7 - Javier Boero (jboero) - Fork: ingjavierboero
+**Estado:** ✅ Ejercicios 1 y 2 completados
+
+**Ejercicio 1 - Juego de Adivinanza:**
+- ✅ Estados creados correctamente
+- ✅ Manejo del input implementado
+- ✅ Verificación del número implementada
+- ✅ Mensaje con clase CSS dinámica
+- 🌟 **Extra:** Contador de intentos
+- 🌟 **Extra:** Botón de reinicio
+- ✅ Buen placeholder dinámico en el input
+
+**Ejercicio 2 - Gestor de Tareas:**
+- ✅ `toggleTask` implementado correctamente
+- ✅ `addTask` implementado con ID incremental usando `Math.max`
+
+**Calificación:** ⭐⭐⭐⭐ Muy buen trabajo
+
+---
+
+### PR #8 - Marcelo Quiroga (mquiroga) - Fork: MarceloHarp
 **Estado:** ✅ Ejercicios 1 y 2 completados
 
 **Ejercicio 1 - Juego de Adivinanza:**
@@ -142,6 +161,9 @@ Este documento contiene la revisión de los ejercicios entregados por los alumno
 - ✅ Verificación del número implementada
 - ✅ Mensaje con clases CSS dinámicas (`mensaje-acierto`, `resultado-error`)
 - 🌟 **Extra:** Imagen personalizada de Chilavert para errores 😄
+  - **Ubicación:** `projects/ejercicios/01-ejercicio-juego-adivinanza/public/chila.jpg`
+  - **Uso en código:** `<img src="/chila.jpg" alt="Fallaste" />` en `App.jsx`
+  - **Mensaje de error:** "Como dijo José Luis Félix Chilavert... Tú no has ganado nada!."
 - 🌟 **Extra:** Botón "Volver a intentarlo"
 - ✅ Estilos CSS con animaciones (keyframes)
 - ⚠️ **Observación:** Tiene `console.log` de debug
@@ -154,27 +176,6 @@ Este documento contiene la revisión de los ejercicios entregados por los alumno
 - ⚠️ **Observación menor:** `patch-package` en dependencias de producción en lugar de dev
 
 **Calificación:** ⭐⭐⭐⭐ Muy buen trabajo, creativo con los extras
-
----
-
-### PR #8 - Marcelo Quiroga (mquiroga) - Fork: MarceloHarp
-**Estado:** ✅ Ejercicios 1 y 2 completados
-
-**Ejercicio 1 - Juego de Adivinanza:**
-- ✅ Estados creados correctamente
-- ✅ Manejo del input implementado
-- ✅ Verificación del número implementada
-- ⚠️ **Bug:** Compara `numeroJugador === numeroMaquina` antes de actualizar `numeroMaquina`, debería comparar con el nuevo número generado
-- ✅ Muestra el resultado con el nuevo número
-- ⚠️ **Observación:** Tiene `console.log` de debug
-- ⚠️ **Mejora sugerida:** Cambiar el texto del botón de "Verificar" a "Adivinar" para consistencia
-
-**Ejercicio 2 - Gestor de Tareas:**
-- ✅ `toggleTask` implementado correctamente
-- ✅ `addTask` implementado con ID incremental (`tasks.length + 1`)
-- ⚠️ **Bug potencial:** El cálculo del ID con `tasks.length + 1` puede causar IDs duplicados si se eliminan tareas. Mejor usar `Math.max(...tasks.map(t => t.id)) + 1`
-
-**Calificación:** ⭐⭐⭐ Buen trabajo, con algunos bugs menores a corregir
 
 ---
 
@@ -239,8 +240,8 @@ Este documento contiene la revisión de los ejercicios entregados por los alumno
 | Sebastián Maeck | #4 | ✅ | ✅ | Contador, reinicio | ⭐⭐⭐⭐⭐ |
 | Maximiliano Arruñada | #5 | ✅ | ✅ | Tipos, diseño | ⭐⭐⭐⭐⭐ |
 | Ramiro Palavecino | #6 | ✅ | ✅ | Límite intentos | ⭐⭐⭐⭐ |
-| Javier Boero | #7 | ✅ | ✅ | Imagen creativa | ⭐⭐⭐⭐ |
-| Marcelo Quiroga | #8 | ⚠️ Bug | ⚠️ Bug ID | - | ⭐⭐⭐ |
+| Javier Boero | #7 | ✅ | ✅ | Contador, reinicio | ⭐⭐⭐⭐ |
+| Marcelo Quiroga | #8 | ✅ | ✅ | 🎨 Imagen Chilavert | ⭐⭐⭐⭐ |
 | Walter Pasinato | #9 | ✅ | ❌ | - | ⭐⭐⭐ |
 | Lorena González | #10 | ❌ | ✅ | - | ⭐⭐⭐ |
 | Ian Cinti | #11 | ✅ | ✅ | - | ⭐⭐⭐⭐ |
@@ -262,6 +263,6 @@ Este documento contiene la revisión de los ejercicios entregados por los alumno
 - Varios alumnos implementaron features extras como contador de intentos y botón de reinicio
 - Buenos estilos CSS con clases dinámicas basadas en el estado
 - Uso correcto de TypeScript para tipos personalizados
-- Creatividad en las soluciones (imagen de Chilavert 😄)
+- Creatividad en las soluciones (imagen de Chilavert de Marcelo Quiroga en PR #8 😄)
 
 ¡Excelente trabajo del grupo en general! 🎉
