@@ -35,4 +35,34 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-/* TODO: pueden agregar más estilos personalizados aquí */
+/* --- EXTRAS --- */
+
+/* 1. Scrollbar*/
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9; /* slate-100 */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1; /* slate-300 */
+  border-radius: 5px;
+  border: 2px solid #f1f5f9; /* Borde para efecto "flotante" */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; /* slate-400 */
+}
+
+/* 2. Color de selección de texto*/
+::selection {
+  background-color: #dbeafe; /* blue-100 */
+  color: #1e40af; /* blue-800 */
+}
+
+/* 3. Smooth Scrolling global */
+html {
+  scroll-behavior: smooth;
+}
