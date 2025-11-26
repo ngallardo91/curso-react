@@ -7,15 +7,14 @@ export const Route = createFileRoute('/')({
 function HomeComponent() {
   return (
     <div className="text-center py-16">
-      <h1 className="text-5xl font-bold text-gray-900 mb-4">
-        Bienvenido a Mi Tienda
+      <h1 className="text-5xl font-bold text-gray-900 mb-4 dark:text-white transition-colors">        Bienvenido a Mi Tienda
       </h1>
-      <p className="text-xl text-gray-600 mb-8">
-        Descubre los mejores productos al mejor precio
+      <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 transition-colors">        Descubre los mejores productos al mejor precio
       </p>
       <div className="flex justify-center gap-4">
         <Link
           to="/products"
+          search={{ page: 1, search: '', minPrice: '', maxPrice: '', sortBy: '' }}
           className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
         >
           Ver Productos
@@ -27,7 +26,7 @@ function HomeComponent() {
           Explorar Categorías
         </Link>
       </div>
-      
+
       <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
         <div className="bg-white p-6 rounded-lg shadow-md card-hover animate-fadeIn">
           <div className="text-3xl mb-3">🚚</div>
@@ -36,14 +35,14 @@ function HomeComponent() {
             En compras superiores a $50
           </p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md card-hover animate-fadeIn" style={{animationDelay: '0.1s'}}>
+        <div className="bg-white p-6 rounded-lg shadow-md card-hover animate-fadeIn" style={{ animationDelay: '0.1s' }}>
           <div className="text-3xl mb-3">🔒</div>
           <h3 className="text-xl font-semibold mb-2">Pago Seguro</h3>
           <p className="text-gray-600">
             Protección en todas tus compras
           </p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md card-hover animate-fadeIn" style={{animationDelay: '0.2s'}}>
+        <div className="bg-white p-6 rounded-lg shadow-md card-hover animate-fadeIn" style={{ animationDelay: '0.2s' }}>
           <div className="text-3xl mb-3">⭐</div>
           <h3 className="text-xl font-semibold mb-2">Calidad Garantizada</h3>
           <p className="text-gray-600">

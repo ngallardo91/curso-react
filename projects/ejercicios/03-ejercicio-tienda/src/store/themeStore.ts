@@ -15,7 +15,6 @@ export const useThemeStore = create<ThemeStore>()(
         const newIsDark = !get().isDark;
         set({ isDark: newIsDark });
         
-        // Manipulación directa del DOM para Tailwind
         if (newIsDark) {
           document.documentElement.classList.add('dark');
         } else {
@@ -25,7 +24,7 @@ export const useThemeStore = create<ThemeStore>()(
     }),
     {
       name: 'theme-storage',
-      // Esto asegura que al recargar la página (F5) se mantenga el color correcto
+      // asegura que al recargar la página se mantenga el color
       onRehydrateStorage: () => (state) => {
         if (state?.isDark) {
           document.documentElement.classList.add('dark');

@@ -28,7 +28,6 @@ export function ProductCard({ product }: ProductCardProps) {
       </button>
 
       <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
-        {/* Fondo de la imagen: En dark mode lo dejamos blanco (o gris clarito) porque las fotos son JPG con fondo blanco y quedan feas sobre negro */}
         <div className="overflow-hidden p-4 bg-white dark:bg-white/90 transition-colors">
             <img
               src={product.image}
