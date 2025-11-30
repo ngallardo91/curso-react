@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
 import { ProductCard } from '../../components/ProductCard';
-import { useProductFilters } from '../../components/useProductsFilters';
+import { useProductFilters } from '../../services/useProductsFilters';
 
 export const Route = createFileRoute('/products/')({
   component: ProductsComponent,
@@ -24,7 +24,7 @@ function ProductsComponent() {
         resetFilters
     } = useProductFilters(productsToFilter);
 
-    
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
