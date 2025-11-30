@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
 import { useCartStore } from '../../store/cartStore';
+import { AddToCartButton } from '../../components/AddToCartButton';
 
 export const Route = createFileRoute('/categories/$category')({
   component: CategoryProductsComponent,
@@ -49,12 +50,13 @@ function CategoryProductsComponent() {
             <span className="text-2xl font-bold text-blue-600">
               ${product.price.toFixed(2)}
             </span>
-            <button
+            {/* <button
               onClick={() => addToCart(product)}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium"
             >
               Agregar
-            </button>
+            </button> */}
+            <AddToCartButton product={product} ></AddToCartButton>
           </div>
           </div>
         ))}
