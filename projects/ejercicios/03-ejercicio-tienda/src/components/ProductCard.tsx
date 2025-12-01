@@ -2,15 +2,17 @@ import type { Product } from '../types/product';
 import { useCartStore } from '../store/cartStore';
 import { Link } from '@tanstack/react-router';
 
+
 interface ProductCardProps {
   product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart);
+
   
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">    
       <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
         <img
           src={product.image}

@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+import { useCartStore } from '../../store/cartStore';
 
 export const Route = createFileRoute('/categories/$category')({
   component: CategoryProductsComponent,
@@ -8,7 +9,8 @@ export const Route = createFileRoute('/categories/$category')({
 
 function CategoryProductsComponent() {
   const { category } = Route.useParams();
-  
+  const addToCart = useCartStore((state) => state.addToCart);
+
   const { data: products, isLoading } = useQuery({
     queryKey: ['products', 'category', category],
     queryFn: () => productsApi.getByCategory(category),
@@ -33,7 +35,7 @@ function CategoryProductsComponent() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {products?.map((product) => (
-          <div key={product.id} className="bg-white rounded-lg shadow-md p-4">
+          <div key={product.id} className="bg-white rounded-lg shadow-md p-4 flex flex-col" > {/*className="bg-white rounded-lg shadow-md p-4">*/}
             <img
               src={product.image}
               alt={product.title}
@@ -46,6 +48,11 @@ function CategoryProductsComponent() {
               ${product.price.toFixed(2)}
             </p>
             {/* TODO: Los alumnos deben agregar el botón para agregar al carrito */}
+            {/*<button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium">*/}
+            <button  onClick={() => addToCart(product)} 
+               className="mt-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium">
+              Agregar al carrito
+            </button>
           </div>
         ))}
       </div>
