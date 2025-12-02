@@ -40,3 +40,42 @@
 .read-the-docs {
   color: #888;
 }
+
+.resultado {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+.resultado.correcto {
+  background-color: #4ade80;
+  color: #065f46;
+  border: 2px solid #22c55e;
+}
+
+.resultado.incorrecto {
+  background-color: #f87171;
+  color: #7f1d1d;
+  border: 2px solid #ef4444;
+}
+
+form {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+form input {
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  border-radius: 8px;
+  border: 1px solid #646cff;
+  text-align: center;
+}
+
+form input:focus {
+  outline: 2px solid #646cff;
+}
