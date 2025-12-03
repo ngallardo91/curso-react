@@ -2,6 +2,8 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
 import { useCartStore } from '../../store/cartStore';
+import Spinner from '../../components/LoadingSpinner';
+import ErrorMsg from '../../components/ErrorMsg';
 
 export const Route = createFileRoute('/categories/$category')({
   component: CategoryProductsComponent,
@@ -11,15 +13,24 @@ function CategoryProductsComponent() {
   const { category } = Route.useParams();
   const addToCart = useCartStore((state) => state.addToCart);
 
-  const { data: products, isLoading } = useQuery({
+  const { data: products, isLoading, error } = useQuery({
     queryKey: ['products', 'category', category],
     queryFn: () => productsApi.getByCategory(category),
   });
   
+  {/*
   if (isLoading) {
     return <div className="text-center py-8">Cargando productos...</div>;
   }
-  
+  */}
+  if (isLoading) {
+    return <Spinner />;
+  }
+  if (error) {
+    return  <ErrorMsg message="Error al cargar los productos de la categoria seleccionada" />
+  }
+
+
   return (
     <div>
       <a

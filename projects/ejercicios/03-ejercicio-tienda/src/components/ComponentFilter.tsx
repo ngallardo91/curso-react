@@ -4,6 +4,7 @@ export type PriceFilter = {
   minPrice?: number;
   maxPrice?: number;
   searchTerm?: string;
+  sortBy?: 'price-asc' | 'price-desc' | 'best-rated' | 'most-reviews' | '';
 };
 
 type ComponentFilterProps = {
@@ -25,6 +26,7 @@ export default function ComponentFilter({
     minPrice: value?.minPrice,
     maxPrice: value?.maxPrice,
     searchTerm: value?.searchTerm ?? "",
+    sortBy: value?.sortBy ?? '',
   });
 
   useEffect(() => {
@@ -32,8 +34,9 @@ export default function ComponentFilter({
       minPrice: value?.minPrice,
       maxPrice: value?.maxPrice,
       searchTerm: value?.searchTerm ?? "",
+      sortBy: value?.sortBy ?? ""
     });
-  }, [value?.minPrice, value?.maxPrice, value?.searchTerm]);
+  }, [value?.minPrice, value?.maxPrice, value?.searchTerm, value?.sortBy]);
 
   useEffect(() => {
     if (!onChange) return;
@@ -50,7 +53,7 @@ export default function ComponentFilter({
     setState((s) => ({ ...s, ...patch }));
 
   const handleReset = () => {
-    const cleared: PriceFilter = { minPrice: undefined, maxPrice: undefined, searchTerm: "" };
+    const cleared: PriceFilter = { minPrice: undefined, maxPrice: undefined, searchTerm: "", sortBy: "" };
     setState(cleared);
     if (onChange) onChange(cleared);
   };
@@ -58,7 +61,8 @@ export default function ComponentFilter({
   const isActive =
     state.searchTerm ||
     state.minPrice !== undefined ||
-    state.maxPrice !== undefined;
+    state.maxPrice !== undefined ||
+    state.sortBy;
 
   return (
     <div className={`flex items-center gap-4 ${className}`}>
@@ -103,6 +107,18 @@ export default function ComponentFilter({
         min={0}
         step="0.01"
       />
+      {/* ORDENAMIENTO */}
+      <select
+        value={state.sortBy ?? ""}
+        onChange={(e) => update({ sortBy: e.target.value as PriceFilter["sortBy"] })}
+        className="px-3 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+      >
+        <option value="">Ordenar por...</option>
+        <option value="price-asc">Precio: Menor a Mayor</option>
+        <option value="price-desc">Precio: Mayor a Menor</option>
+        <option value="best-rated">Mejor Valorados</option>
+        <option value="most-reviews">Más Reseñas</option>
+      </select>
 
       {/* BOTÓN BORRAR FILTROS */}
       {isActive && (

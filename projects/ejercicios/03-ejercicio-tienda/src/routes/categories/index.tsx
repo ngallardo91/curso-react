@@ -1,21 +1,30 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+import Spinner from '../../components/LoadingSpinner';
+import ErrorMsg from '../../components/ErrorMsg';
 
 export const Route = createFileRoute('/categories/')({
   component: CategoriesComponent,
 });
 
 function CategoriesComponent() {
-  const { data: categories, isLoading } = useQuery({
+  const { data: categories, isLoading, error } = useQuery({
     queryKey: ['categories'],
     queryFn: productsApi.getCategories,
   });
   
-  if (isLoading) {
+  {/*if (isLoading) {
     return <div className="text-center py-8">Cargando categorías...</div>;
+  }*/}
+  if (isLoading) {
+    // 🔥 Ahora muestra tu spinner reutilizable
+    return <Spinner />;
   }
-  
+
+  if (error) {
+      return  <ErrorMsg message="Error al cargar las categorias" />
+    }
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-6">
