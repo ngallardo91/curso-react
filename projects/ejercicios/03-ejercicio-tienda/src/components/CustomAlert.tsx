@@ -1,12 +1,13 @@
 export interface CustomAlertProps {
-  color?: "green" | "red" | "blue";
+  color?: "green" | "red" | "blue" | "purple";
   description?: string;
 }
 
 const colorVariants = {
     green: "bg-green-500",
     red: "bg-red-500",
-    blue: "bg-blue-500"
+    blue: "bg-blue-500",
+    purple: "bg-purple-500"
 }
 
 export function CustomAlert({ color = "blue", description = "Hecho..." }: CustomAlertProps) {

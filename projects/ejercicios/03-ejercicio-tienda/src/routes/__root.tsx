@@ -1,6 +1,8 @@
 import { createRootRoute, Outlet, Link } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { useCartStore } from '../store/cartStore';
+// import { useFavoriteStore } from '../store/favoriteStore';
+import { Heart } from 'lucide-react';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -8,6 +10,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const totalItems = useCartStore((state) => state.getTotalItems());
+  // const totalFavorites = useFavoriteStore((state) => state.getTotalFavorites());
   
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
@@ -40,8 +43,29 @@ function RootComponent() {
                 >
                   Categorías
                 </Link>
+                <Link
+                  to="/favorites"
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md transition-all duration-200 hover:bg-blue-50"
+                  activeProps={{
+                    className: 'text-blue-600 font-semibold bg-blue-50',
+                  }}
+                >
+                  
+                </Link>
               </div>
             </div>
+            <div className="flex flex-row gap-6 items-center">
+             <Link
+              to="/favorites"
+              className="relative text-gray-700 hover:text-blue-600 transition-all duration-200 hover:scale-110"
+            >
+              <Heart className="w-7.5 h-7.5"/>
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                  {/* {totalFavorites} */}
+                </span>
+              )}
+            </Link>
             <Link
               to="/cart"
               className="relative text-gray-700 hover:text-blue-600 transition-all duration-200 hover:scale-110"
@@ -53,6 +77,7 @@ function RootComponent() {
                 </span>
               )}
             </Link>
+            </div>
           </div>
         </div>
       </nav>

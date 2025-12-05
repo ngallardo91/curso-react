@@ -3,6 +3,8 @@ import { useCartStore } from '../store/cartStore';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { CustomAlert, type CustomAlertProps } from './CustomAlert';
+import { useFavoriteStore } from '../store/favoriteStore';
+import { Heart } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
@@ -12,7 +14,10 @@ interface ProductCardProps {
 export function ProductCard({ product, alert }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart);
   const [showAlert, setShowAlert] = useState(false);
-  
+
+  const { addToFavorites, removeFavorite, isFavorite } = useFavoriteStore();
+  const favorite = isFavorite(product.id);
+
   const handleAddToCart = () => {
     addToCart(product);
     setShowAlert(true);
@@ -20,6 +25,17 @@ export function ProductCard({ product, alert }: ProductCardProps) {
     setTimeout(() => {
       setShowAlert(false)
     }, 3000);
+  }
+
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (favorite){
+      removeFavorite(product.id)
+    } else {
+      addToFavorites(product)
+    }
   }
   
   return (
@@ -29,13 +45,25 @@ export function ProductCard({ product, alert }: ProductCardProps) {
       )}
 
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
-        <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
-          <img
-            src={product.image}
-            alt={product.title}
-            className="w-full h-48 object-contain p-4 bg-white transition-transform duration-300 hover:scale-110"
-          />
-        </Link>
+        <div className="relative">
+          <button 
+            onClick={toggleFavorite}
+            className="absolute top-2 right-2 z-10"
+          >
+            <Heart 
+              className={`w-6 h-6 transition-colors duration-200 ${favorite ? "fill-red-600 text-red-600" : "text-gray-800"}`}
+            />
+          </button>
+
+          <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
+            <img
+              src={product.image}
+              alt={product.title}
+              className="w-full h-48 object-contain p-4 bg-white transition-transform duration-300 hover:scale-110"
+            />
+          </Link>
+        </div>
+        
         <div className="p-4">
           <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
             <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600">

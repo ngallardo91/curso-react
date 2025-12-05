@@ -51,7 +51,7 @@ function ProductsComponent() {
           placeholder="Descripción..."
           value={searchItem}
           onChange={(e) => setSearchItem(e.target.value)}
-          className="border border-gray-200 rounded-lg p-2 w-1/6 h-10 focus:ring-2 focus:ring-blue-700 outline-none"
+          className="border border-gray-400 rounded-lg p-2 w-1/4 h-10 focus:ring-2 focus:ring-blue-700 outline-none"
         />
 
         <div className="flex flex-row gap-2 text-md items-center">
@@ -69,7 +69,7 @@ function ProductsComponent() {
               setMinPrice(Number(e.target.value))
             }
           }}
-          className="border border-gray-200 rounded-lg p-2 w-1/12 text-right focus:ring-2 focus:ring-blue-700 outline-none"
+          className="border border-gray-400 rounded-lg p-2 w-1/12 text-right focus:ring-2 focus:ring-blue-700 outline-none"
         />
 
         <div className="flex flex-row gap-2 text-md items-center">
@@ -87,7 +87,7 @@ function ProductsComponent() {
               setMaxPrice(Number(e.target.value))
             }
           }}
-          className="border border-gray-200 rounded-lg p-2 w-1/12 text-right focus:ring-2 focus:ring-blue-700 outline-none"
+          className="border border-gray-400 rounded-lg p-2 w-1/12 text-right focus:ring-2 focus:ring-blue-700 outline-none"
         />
 
         <div className="flex items-center relative group">
