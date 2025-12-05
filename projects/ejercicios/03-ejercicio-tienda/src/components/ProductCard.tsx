@@ -31,7 +31,7 @@ export function ProductCard({ product, alert }: ProductCardProps) {
     e.stopPropagation();
     e.preventDefault();
 
-    if (favorite){
+    if (favorite) {
       removeFavorite(product.id)
     } else {
       addToFavorites(product)
@@ -44,14 +44,14 @@ export function ProductCard({ product, alert }: ProductCardProps) {
         <CustomAlert description={alert?.description ?? "Producto agregado desde la lista"} color={alert?.color} />
       )}
 
-      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn h-full flex flex-col">
         <div className="relative">
           <button 
             onClick={toggleFavorite}
-            className="absolute top-2 right-2 z-10"
+            className="absolute top-2 right-2 z-10 "
           >
             <Heart 
-              className={`w-6 h-6 transition-colors duration-200 ${favorite ? "fill-red-600 text-red-600" : "text-gray-800"}`}
+              className={`w-6 h-6 transition-colors duration-300 ${favorite ? "fill-red-600 text-red-600" : "text-gray-800"}`}
             />
           </button>
 
@@ -64,28 +64,30 @@ export function ProductCard({ product, alert }: ProductCardProps) {
           </Link>
         </div>
         
-        <div className="p-4">
+        <div className="p-4 flex flex-col grow">
           <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
             <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600">
               {product.title}
             </h3>
           </Link>
-          <div className="flex items-center mb-2">
-            <span className="text-yellow-500">⭐</span>
-            <span className="text-sm text-gray-600 ml-1">
-              {product.rating.rate} ({product.rating.count})
-            </span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-2xl font-bold text-blue-600">
-              ${product.price.toFixed(2)}
-            </span>
-            <button
-              onClick={handleAddToCart}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium"
-            >
-              Agregar
-            </button>
+          <div className="mt-auto">
+            <div className="flex items-center mb-2">
+              <span className="text-yellow-500">⭐</span>
+              <span className="text-sm text-gray-600 ml-1">
+                {product.rating.rate} ({product.rating.count})
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-2xl font-bold text-blue-600">
+                ${product.price.toFixed(2)}
+              </span>
+              <button
+                onClick={handleAddToCart}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium"
+              >
+                Agregar
+              </button>
+            </div>
           </div>
         </div>
       </div>

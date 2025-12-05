@@ -1,7 +1,7 @@
 import { createRootRoute, Outlet, Link } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { useCartStore } from '../store/cartStore';
-// import { useFavoriteStore } from '../store/favoriteStore';
+import { useFavoriteStore } from '../store/favoriteStore';
 import { Heart } from 'lucide-react';
 
 export const Route = createRootRoute({
@@ -10,7 +10,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const totalItems = useCartStore((state) => state.getTotalItems());
-  // const totalFavorites = useFavoriteStore((state) => state.getTotalFavorites());
+  const totalFavorites = useFavoriteStore((state) => state.quantity);
   
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
@@ -57,12 +57,12 @@ function RootComponent() {
             <div className="flex flex-row gap-6 items-center">
              <Link
               to="/favorites"
-              className="relative text-gray-700 hover:text-blue-600 transition-all duration-200 hover:scale-110"
+              className="relative text-gray-700 hover:text-red-500 transition-all duration-200 hover:scale-110"
             >
               <Heart className="w-7.5 h-7.5"/>
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
-                  {/* {totalFavorites} */}
+                  {totalFavorites}
                 </span>
               )}
             </Link>

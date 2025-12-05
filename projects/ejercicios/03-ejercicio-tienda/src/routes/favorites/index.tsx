@@ -38,9 +38,9 @@ function CartComponent() {
         </h1>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-6 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {items.map((item) => (
-            <div className="col-span-2 space-y-4">
+            <div className="space-y-4">
                 <ProductCard product={item} alert={{description: "Producto Agregado desde Favoritos", color: "red" }} />
             </div>
           ))}
