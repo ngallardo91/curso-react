@@ -27,9 +27,7 @@ function ProductDetailComponent() {
   
   if (error || !product) {
     return (
-      <div className="text-center text-red-600 py-8">
-        Error al cargar el producto
-      </div>
+      <CustomAlert description="Error al cargar el producto desde el detalle" color="red" error={true}/>
     );
   }
 
