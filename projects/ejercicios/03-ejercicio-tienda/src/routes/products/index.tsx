@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
 import { ProductCard } from '../../components/ProductCard';
 import { useState } from 'react';
-import { CircleX, DollarSign, Search } from "lucide-react";
+import { CircleX, DollarSign, ListOrdered, Search } from "lucide-react";
 
 export const Route = createFileRoute('/products/')({
   component: ProductsComponent,
@@ -15,6 +15,7 @@ function ProductsComponent() {
     queryFn: productsApi.getAll,
   });
 
+  const [sortBy, setSortBy] = useState("best-rated");
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(99999);
   const [searchItem, setSearchItem] = useState("");
@@ -41,18 +42,20 @@ function ProductsComponent() {
         Todos los Productos
       </h1>
 
-      <div className="flex flex-row h-10 gap-6 flex-nowrap">
-        <div className="flex flex-row gap-2 text-md items-center">
-          <Search className="text-gray-800"/> Filtros: 
-        </div>
+      <div className="flex flex-row h-10 gap-4 flex-nowrap">
+        <div className="flex flex-row gap-2 w-1/4">
+          <div className="flex flex-row gap-2 text-md items-center">
+            <Search className="text-gray-800"/> Filtros: 
+          </div>
 
-        <input 
-          type="text"
-          placeholder="Descripción..."
-          value={searchItem}
-          onChange={(e) => setSearchItem(e.target.value)}
-          className="border border-gray-400 rounded-lg p-2 w-1/4 h-10 focus:ring-2 focus:ring-blue-700 outline-none"
-        />
+          <input 
+            type="text"
+            placeholder="Descripción..."
+            value={searchItem}
+            onChange={(e) => setSearchItem(e.target.value)}
+            className="border border-gray-400 rounded-lg p-2 w-full h-10 focus:ring-2 focus:ring-blue-700 outline-none"
+          />
+        </div>
 
         <div className="flex flex-row gap-2 text-md items-center">
           <DollarSign className="text-gray-800"/> Precio Mínimo: 
@@ -105,9 +108,34 @@ function ProductsComponent() {
             Limpiar Filtros
           </span>
         </div>
+
+        <div className="flex flex-row gap-2 w-fit border border-gray-400 rounded-lg px-2 focus:ring-2 focus:ring-blue-700 outline-none ml-auto">
+          <div className="flex flex-row gap-2 text-md items-center">
+            <ListOrdered className="text-gray-800"/> 
+          </div>
+
+          <select
+            className="px-2 outline-none"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as "best-rated" | "more-reviews" | "price-asc" | "price-desc")}
+          >
+            <option value="best-rated">Mejor Valorados</option>
+            <option value="more-reviews">Más Reseñas</option>
+            <option value="price-asc">Menor Precio</option>
+            <option value="price-desc">Mayor Precio</option>
+          </select>
+        </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-        {products?.filter((x) => x.price >= minPrice && x.price <= maxPrice && x.title.toLowerCase().includes(searchItem.toLowerCase())).map((product) => (
+        {products?.filter((x) => x.price >= minPrice && x.price <= maxPrice && x.title.toLowerCase().includes(searchItem.toLowerCase()))
+                  .sort((a, b) => {
+                    if (sortBy === "best-rated") return b.rating.rate - a.rating.rate;
+                    if (sortBy === "more-reviews") return b.rating.count - a.rating.count;
+                    if (sortBy === "price-asc") return a.price - b.price;
+                    if (sortBy === "price-desc") return b.price - a.price;
+                    return 0;
+                  })
+                  .map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
