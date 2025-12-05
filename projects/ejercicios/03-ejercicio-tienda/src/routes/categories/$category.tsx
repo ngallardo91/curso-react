@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
 import { ProductCard } from '../../components/ProductCard';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
 
 export const Route = createFileRoute('/categories/$category')({
   component: CategoryProductsComponent,
@@ -16,7 +17,8 @@ function CategoryProductsComponent() {
   });
 
   if (isLoading) {
-    return <div className="text-center py-8">Cargando productos...</div>;
+    // return <div className="text-center py-8">Cargando productos...</div>;
+    return <LoadingSpinner />
   }
   
   return (

@@ -4,6 +4,7 @@ import { productsApi } from '../../services/api';
 import { ProductCard } from '../../components/ProductCard';
 import { useState } from 'react';
 import { CircleX, DollarSign, ListOrdered, Search } from "lucide-react";
+import { ProductSkeleton } from '../../components/ProductSkeleton';
 
 export const Route = createFileRoute('/products/')({
   component: ProductsComponent,
@@ -22,9 +23,10 @@ function ProductsComponent() {
   
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-xl text-gray-600">Cargando productos...</div>
-      </div>
+      // <div className="flex justify-center items-center min-h-[400px]">
+      //   <div className="text-xl text-gray-600">Cargando productos...</div>
+      // </div>
+      <ProductSkeleton />
     );
   }
   

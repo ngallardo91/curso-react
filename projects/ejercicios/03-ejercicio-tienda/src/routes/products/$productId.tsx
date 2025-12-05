@@ -4,6 +4,7 @@ import { productsApi } from '../../services/api';
 import { useCartStore } from '../../store/cartStore';
 import { useState } from 'react';
 import { CustomAlert } from '../../components/CustomAlert';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
 
 
 export const Route = createFileRoute('/products/$productId')({
@@ -19,15 +20,9 @@ function ProductDetailComponent() {
     queryKey: ['product', productId],
     queryFn: () => productsApi.getById(Number(productId)),
   });
-
-      
   
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-xl text-gray-600">Cargando producto...</div>
-      </div>
-    );
+    return <LoadingSpinner />
   }
   
   if (error || !product) {
