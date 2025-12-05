@@ -57,7 +57,7 @@ function RootComponent() {
             <div className="flex flex-row gap-6 items-center">
              <Link
               to="/favorites"
-              className="relative text-gray-700 hover:text-red-500 transition-all duration-200 hover:scale-110"
+              className="relative text-gray-700 hover:text-red-500 transition-all duration-100 hover:scale-110"
             >
               <Heart className="w-7.5 h-7.5"/>
               {totalItems > 0 && (
@@ -68,7 +68,7 @@ function RootComponent() {
             </Link>
             <Link
               to="/cart"
-              className="relative text-gray-700 hover:text-blue-600 transition-all duration-200 hover:scale-110"
+              className="relative text-gray-700 hover:text-blue-600 transition-all duration-100 hover:scale-110"
             >
               <span className="text-2xl">🛒</span>
               {totalItems > 0 && (
