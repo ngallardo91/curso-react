@@ -2,7 +2,7 @@ import { createRootRoute, Outlet, Link } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { useCartStore } from '../store/cartStore';
 import { useFavoriteStore } from '../store/favoriteStore';
-import { Heart } from 'lucide-react';
+import { Heart, LogIn, ShoppingCart } from 'lucide-react';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -29,11 +29,6 @@ function RootComponent() {
                   to="/products"
                   search={{
                     page: 1,
-                    min: -1,
-                    max: -1,
-                    desc: "",
-                    itemsQty: 8,
-                    sort: "best-rated"
                   }}
                   className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md transition-all duration-200 hover:bg-blue-50"
                   activeProps={{
@@ -63,28 +58,36 @@ function RootComponent() {
               </div>
             </div>
             <div className="flex flex-row gap-6 items-center">
-             <Link
-              to="/favorites"
-              className="relative text-gray-700 hover:text-red-500 transition-all duration-100 hover:scale-110"
-            >
-              <Heart className="w-7.5 h-7.5"/>
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
-                  {totalFavorites}
-                </span>
-              )}
-            </Link>
-            <Link
-              to="/cart"
-              className="relative text-gray-700 hover:text-blue-600 transition-all duration-100 hover:scale-110"
-            >
-              <span className="text-2xl">🛒</span>
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
-                  {totalItems}
-                </span>
-              )}
-            </Link>
+              <Link
+                to="/favorites"
+                className="relative text-gray-700 hover:text-red-500 transition-all duration-100 hover:scale-110"
+              >
+                <Heart className="w-6 h-6"/>
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                    {totalFavorites}
+                  </span>
+                )}
+              </Link>
+              <Link
+                to="/cart"
+                className="relative text-gray-700 hover:text-blue-600 transition-all duration-100 hover:scale-110"
+              >
+                <ShoppingCart className="w-6 h-6"/>
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
+              <Link
+                to="/register"
+                className="relative text-gray-700 hover:text-blue-500 transition-all duration-100 hover:scale-110"
+              >
+                <div className="flex flex-row gap-2 items-center">
+                  <LogIn className="w-6 h-6"/> Ingresa
+                </div>
+              </Link>
             </div>
           </div>
         </div>

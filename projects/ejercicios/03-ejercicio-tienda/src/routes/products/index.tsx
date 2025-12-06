@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
 import { ProductCard } from '../../components/ProductCard';
-// import { useState } from 'react';
+import { useState } from 'react';
 import { CircleX, DollarSign, List, ListOrdered, Search } from "lucide-react";
 import { ProductSkeleton } from '../../components/ProductSkeleton';
 import { CustomAlert } from '../../components/CustomAlert';
@@ -20,35 +20,24 @@ export const Route = createFileRoute('/products/')({
   component: ProductsComponent,
   validateSearch: (search: ProductsSearch) => ({
     page: Number(search.page ?? 1),
-    min: Number(search.min ?? -1),
-    max: Number(search.max ?? -1),
-    desc: search.desc ?? "",
-    itemsQty: Number(search.itemsQty ?? 8),
-    sort: search.sort ?? "best-rated"
   })
 });
 
 function ProductsComponent() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
+  const currentPage = Number(search.page ?? 1);
 
   const { data: products, isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: productsApi.getAll,
   });
 
-  // const [sortBy, setSortBy] = useState("best-rated");
-  // const [minPrice, setMinPrice] = useState(-1);
-  // const [maxPrice, setMaxPrice] = useState(-1);
-  // const [description, setSearchItem] = useState("");
-  // const [currentPage, setCurrentPage] = useState(page);
-  // const [itemsPerPage, setItemsPerPage] = useState(8);
-  const sortBy = search.sort;
-  const minPrice = search.min;
-  const maxPrice = search.max;
-  const description = search.desc;
-  const currentPage = search.page;
-  const itemsPerPage = search.itemsQty;
+  const [sortBy, setSortBy] = useState("best-rated");
+  const [minPrice, setMinPrice] = useState(-1);
+  const [maxPrice, setMaxPrice] = useState(-1);
+  const [description, setDescription] = useState("");
+  const [itemsPerPage, setItemsPerPage] = useState(8);
 
   const filteredProducts = products?.filter((x) => x.price >= (minPrice === -1 ? 0 : minPrice) && x.price <= (maxPrice === -1 ? Infinity : maxPrice) && x.title.toLowerCase().includes(description.toLowerCase()))
   const sortedProducts = [...(filteredProducts || [])].sort((a, b) => {
@@ -59,11 +48,22 @@ function ProductsComponent() {
     return 0;
   })
 
+  const goToPage = (page: number) => {
+    navigate({ search: { page }})
+  }
+
+  const resetFilters = () => {
+    setSortBy("best-rated");
+    setMinPrice(-1);
+    setMaxPrice(-1);
+    setDescription("");
+    setItemsPerPage(8);
+  }
+
   const totalItems = filteredProducts?.length ?? 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage
-
   const paginatedProducts = sortedProducts.slice(startIndex, endIndex)
   
   if (isLoading) {
@@ -95,15 +95,8 @@ function ProductsComponent() {
             placeholder="Descripción..."
             value={description}
             onChange={(e) => {
-              // setSearchItem(e.target.value)
-              // setCurrentPage(1)
-              navigate({
-                search: {
-                  ...search,
-                  desc: e.target.value,
-                  page: 1
-                }
-              })
+              setDescription(e.target.value);
+              goToPage(1);
             }}
             className="border border-gray-400 rounded-lg p-2 w-full h-10 focus:ring-2 focus:ring-blue-700 outline-none"
           />
@@ -121,15 +114,8 @@ function ProductsComponent() {
             const value = e.target.value
             
             if (/^\d*$/.test(value)) {
-              // setMinPrice(e.target.value === "" ? -1 : Number(e.target.value))
-              // setCurrentPage(1)
-              navigate({
-                search: {
-                  ...search,
-                  min: (e.target.value === "" ? -1 : Number(e.target.value)),
-                  page: 1
-                }
-              })
+              setMinPrice(e.target.value === "" ? -1 : Number(e.target.value));
+              goToPage(1);
             }
           }}
           className="border border-gray-400 rounded-lg p-2 w-1/12 text-right focus:ring-2 focus:ring-blue-700 outline-none"
@@ -147,15 +133,8 @@ function ProductsComponent() {
             const value = e.target.value
             
             if (/^\d*$/.test(value)) {
-              // setMaxPrice(e.target.value === "" ? -1 : Number(e.target.value))
-              // setCurrentPage(1)
-              navigate({
-                search: {
-                  ...search,
-                  max: (e.target.value === "" ? -1 : Number(e.target.value)),
-                  page: 1
-                }
-              })
+              setMaxPrice(e.target.value === "" ? -1 : Number(e.target.value));
+              goToPage(1);
             }
           }}
           className="border border-gray-400 rounded-lg p-2 w-1/12 text-right focus:ring-2 focus:ring-blue-700 outline-none"
@@ -164,21 +143,7 @@ function ProductsComponent() {
         <div className="flex items-center relative group">
           <CircleX 
             role="button" 
-            onClick={() => {
-              // setCurrentPage(1)
-              // setMinPrice(-1)
-              // setMaxPrice(-1)
-              // setSearchItem("")
-              navigate({
-                search: {
-                  ...search,
-                  min: -1,
-                  max: -1,
-                  desc: "",
-                  page: 1
-                }
-              })
-            }} 
+            onClick={resetFilters}
             className="text-red-500 w-6 h-6 cursor-pointer" 
           />
 
@@ -196,15 +161,8 @@ function ProductsComponent() {
             className="px-2 outline-none"
             value={itemsPerPage}
             onChange={(e) => {
-              // setCurrentPage(1)
-              // setItemsPerPage(Number(e.target.value as "8" | "12" | "12"))
-              navigate({
-                search: {
-                  ...search,
-                  itemsQty: (Number(e.target.value as "8" | "12" | "12")),
-                  page: 1
-                }
-              })
+              setItemsPerPage(Number(e.target.value as "8" | "12" | "20"));
+              goToPage(1);
             }}
           >
             <option value="8">8</option>
@@ -221,14 +179,8 @@ function ProductsComponent() {
             className="px-2 outline-none"
             value={sortBy}
             onChange={(e) => {
-              // setSortBy(e.target.value as "best-rated" | "more-reviews" | "price-asc" | "price-desc")
-              navigate({
-                search: {
-                  ...search,
-                  sort: (e.target.value as "best-rated" | "more-reviews" | "price-asc" | "price-desc"),
-                  page: 1
-                }
-              })
+              setSortBy(e.target.value as "best-rated" | "more-reviews" | "price-asc" | "price-desc");
+              goToPage(1);
             }}
           >
             <option value="best-rated">Mejor Valorados</option>
@@ -251,7 +203,6 @@ function ProductsComponent() {
             }`}
             disabled={currentPage === 1}
             onClick={() => { 
-              // setCurrentPage((p) => p - 1)
               navigate({
                 search: {
                   ...search,
@@ -275,7 +226,6 @@ function ProductsComponent() {
             }`}
             disabled={currentPage === totalPages}
             onClick={() => { 
-              // setCurrentPage((p) => p + 1)
               navigate({
                 search: {
                   ...search,
