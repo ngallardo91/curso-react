@@ -1,8 +1,16 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useCartStore } from '../store/cartStore';
 import { CartItemComponent } from '../components/CartItem';
+import { useAuthStore } from '../store/authStore';
 
 export const Route = createFileRoute('/cart')({
+  beforeLoad: async () => {
+    const { isAuthenticated } = useAuthStore.getState()
+
+    if (!isAuthenticated) {
+      throw redirect({ to: "/login" })
+    }
+  },
   component: CartComponent,
 });
 

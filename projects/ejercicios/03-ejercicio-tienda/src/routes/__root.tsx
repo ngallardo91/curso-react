@@ -1,4 +1,4 @@
-import { createRootRoute, Outlet, Link, useNavigate, useRouter } from '@tanstack/react-router';
+import { createRootRoute, Outlet, Link, useNavigate } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { useCartStore } from '../store/cartStore';
 import { useFavoriteStore } from '../store/favoriteStore';
@@ -12,9 +12,6 @@ import { UserMenu } from '../components/UserMenu';
 
 export const Route = createRootRoute({
   component: RootComponent,
-  context: () => ({
-    openLogin: () => {},
-  })
 });
 
 function RootComponent() {
@@ -31,11 +28,15 @@ function RootComponent() {
   const logout = useAuthStore((state) => state.logout)
   const login = useAuthStore((state) => state.login)
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
-  const router = useRouter();
-
-  router.context.openLogin = openLoginDialog()
-
   const navigate = useNavigate();
+
+  function openLoginDialog() {
+    setLoginFlow("email");
+    setEmail("");
+    setPassword("");
+    setError("");
+    setOpenDialogoLogin(true);
+  }
 
   async function handleSubmitEmail() {
     if (!email) return
@@ -51,7 +52,7 @@ function RootComponent() {
       return
     } 
 
-    navigate({ to: "/register", search: { email }});
+    navigate({ to: "/login", search: { email }});
     setOpenDialogoLogin(false);
   }
 
@@ -75,14 +76,6 @@ function RootComponent() {
   function maskEmail (email: string) {
     const [name, domain] = email.split("@");
     return name[0] + "*".repeat(name.length - 1) + "@" + domain;
-  }
-
-  function openLoginDialog() {
-    setLoginFlow("email");
-    setEmail("");
-    setPassword("");
-    setError("");
-    setOpenDialogoLogin(true);
   }
   
   return (

@@ -1,9 +1,17 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useFavoriteStore } from '../../store/favoriteStore';
 import { ProductCard } from '../../components/ProductCard';
 import { Heart } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
 
 export const Route = createFileRoute('/favorites/')({
+  beforeLoad: async () => {
+    const { isAuthenticated } = useAuthStore.getState()
+
+    if (!isAuthenticated) {
+      throw redirect({ to: "/login" })
+    }
+  },
   component: CartComponent,
 });
 

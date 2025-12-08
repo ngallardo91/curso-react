@@ -5,7 +5,7 @@ import { registerSchema, type RegisterFormData } from '../../types/register';
 import { mockAuthService } from '../../services/mockAuthService';
 import { useState } from 'react';
 
-export const Route = createFileRoute('/register/')({
+export const Route = createFileRoute('/login/')({
   component: RegisterComponent,
 });
 

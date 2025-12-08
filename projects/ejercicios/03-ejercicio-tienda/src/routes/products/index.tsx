@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
 import { ProductCard } from '../../components/ProductCard';
@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { CircleX, DollarSign, List, ListOrdered, Search } from "lucide-react";
 import { ProductSkeleton } from '../../components/ProductSkeleton';
 import { CustomAlert } from '../../components/CustomAlert';
+import { useAuthStore } from '../../store/authStore';
 
 type ProductsSearch = {
   page?: string | number;
@@ -17,6 +18,13 @@ type ProductsSearch = {
 };
 
 export const Route = createFileRoute('/products/')({
+  beforeLoad: async () => {
+    const { isAuthenticated } = useAuthStore.getState()
+
+    if (!isAuthenticated) {
+      throw redirect({ to: "/login" })
+    }
+  },
   component: ProductsComponent,
   validateSearch: (search: ProductsSearch) => ({
     page: Number(search.page ?? 1),
