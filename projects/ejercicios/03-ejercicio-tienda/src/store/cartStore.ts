@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Product, CartItem } from '../types/product';
-import { useAuthStore } from './authStore';
 
 interface CartStore {
   items: CartItem[];
@@ -11,11 +10,7 @@ interface CartStore {
   clearCart: () => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
-}
-
-function getCartStorageKey() {
-  const user = useAuthStore.getState().user;
-  return user ? `cart-storage-${user.id}` : `cart-storage-guest`;
+  loadCart: (userId: string | null) => void;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -80,9 +75,21 @@ export const useCartStore = create<CartStore>()(
       getTotalItems: () => {
         return get().items.reduce((total, item) => total + item.quantity, 0);
       },
+
+      loadCart: (userId: string | null) => {
+        const key = userId ? `cart-storage-${userId}` : "cart-storage-guest";
+        const stored = localStorage.getItem(key);
+        
+        if (stored) {
+          set({ items: JSON.parse(stored).state.items })
+        } else {
+          set({ items: [] })
+        }
+      }
     }),
     {
-      name: getCartStorageKey(),
+      name: "cart-storage-temp",
+      partialize: (state) => ({ items: state.items })
     }
   )
 );

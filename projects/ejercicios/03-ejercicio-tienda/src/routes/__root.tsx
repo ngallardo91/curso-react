@@ -9,6 +9,7 @@ import { Dialogo } from '../components/Dialogo';
 import { mockAuthService } from '../services/mockAuthService';
 import { useAuthStore } from '../store/authStore';
 import { UserMenu } from '../components/UserMenu';
+import { useLoginModalStore } from '../store/loginModalStore';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -18,8 +19,7 @@ function RootComponent() {
   useTokenRefresh();
   
   const totalItems = useCartStore((state) => state.getTotalItems());
-  const totalFavorites = useFavoriteStore((state) => state.quantity);
-  const [openDialogoLogin, setOpenDialogoLogin] = useState(false);
+  const totalFavorites = useFavoriteStore((state) => state.products.length);
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -29,13 +29,15 @@ function RootComponent() {
   const login = useAuthStore((state) => state.login)
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const navigate = useNavigate();
+  const openLoginModal = useLoginModalStore((state) => state.openLogin)
+  const setOpenLoginModal = useLoginModalStore((state) => state.setOpenLogin)
 
   function openLoginDialog() {
     setLoginFlow("email");
     setEmail("");
     setPassword("");
     setError("");
-    setOpenDialogoLogin(true);
+    useLoginModalStore.getState().setOpenLogin(true);
   }
 
   async function handleSubmitEmail() {
@@ -53,7 +55,7 @@ function RootComponent() {
     } 
 
     navigate({ to: "/login", search: { email }});
-    setOpenDialogoLogin(false);
+    useLoginModalStore.getState().setOpenLogin(false);
   }
 
   async function handleSubmitPassword() {
@@ -63,7 +65,8 @@ function RootComponent() {
       const result = await login(email, password)
       
       if (result) {
-        setOpenDialogoLogin(false)
+        useLoginModalStore.getState().setOpenLogin(false);
+        setLoginFlow("email");
         navigate({ to: '/' })
       } else {
         setError("Contraseña Incorrecta")
@@ -120,7 +123,7 @@ function RootComponent() {
                 className="relative text-gray-700 hover:text-red-500 transition-all duration-100 hover:scale-110"
               >
                 <Heart className="w-6 h-6"/>
-                {totalItems > 0 && (
+                {totalFavorites > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
                     {totalFavorites}
                   </span>
@@ -160,7 +163,7 @@ function RootComponent() {
         <Outlet />
       </main>
 
-      <Dialogo open={openDialogoLogin} onClose={() => setOpenDialogoLogin(false)}>
+      <Dialogo open={openLoginModal} onClose={() => setOpenLoginModal(false)}>
         <h2 className="text-xl font-bold mb-2 text-center"> 
           { loginFlow === "email" ? "Iniciar Sesión" : "Ingresá tu contraseña" }
         </h2>

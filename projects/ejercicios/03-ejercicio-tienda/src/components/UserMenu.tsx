@@ -1,6 +1,7 @@
 import { UserRound } from "lucide-react";
 import type { User } from "../types/auth.types";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 
 interface UserMenuProps {
     user: User,
@@ -9,6 +10,7 @@ interface UserMenuProps {
 
 export function UserMenu({ user, onLogout }: UserMenuProps) {
     const [open, setOpen] = useState(false)
+    const navigate = useNavigate();
     const menuRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -45,7 +47,10 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
                         {user.email}
                     </p>
                     <button
-                        onClick={onLogout}
+                        onClick={() => {
+                            onLogout()
+                            navigate({ to: "/" })
+                        }}
                         className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-red-600"
                     >
                         Cerrar Sesión

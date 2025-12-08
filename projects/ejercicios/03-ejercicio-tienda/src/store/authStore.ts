@@ -2,6 +2,8 @@ import { create } from "zustand";
 import type { AuthState, Role } from "../types/auth.types";
 import { persist } from "zustand/middleware";
 import { mockAuthService } from "../services/mockAuthService";
+import { useCartStore } from "./cartStore";
+import { useFavoriteStore } from "./favoriteStore";
 
 export const useAuthStore = create<AuthState>()(
     persist(
@@ -20,6 +22,9 @@ export const useAuthStore = create<AuthState>()(
                         isAuthenticated: true
                     })
                         
+                    useCartStore.getState().loadCart(result.user.id)
+                    useFavoriteStore.getState().setUser(result.user.id)
+                    
                     return true
                 }
  
@@ -32,6 +37,9 @@ export const useAuthStore = create<AuthState>()(
                 if (tokens?.refreshToken) {
                     await mockAuthService.logout(tokens.refreshToken)
                 }
+
+                useCartStore.getState().clearCart()
+                useFavoriteStore.getState().clearFavorites()
                 
                 set({
                     user: null,
@@ -39,6 +47,7 @@ export const useAuthStore = create<AuthState>()(
                     isAuthenticated: false,
                 })
             },
+
             refreshAccessToken: async () => {
                 const { tokens } = get()
 
@@ -63,6 +72,7 @@ export const useAuthStore = create<AuthState>()(
 
                 return false
             },
+
             hasRole: (role: Role | Role[]) => {
                 const { user } = get()
 
@@ -70,6 +80,7 @@ export const useAuthStore = create<AuthState>()(
                 
                 return Array.isArray(role) ? role.includes(user.role) : user.role === role
             },
+
             isTokenExpired: () => {
                 const { tokens } = get()
 

@@ -1,19 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Product } from '../types/product';
-import { useAuthStore } from './authStore';
 
 interface FavoriteStore {
   products: Product[];
   quantity: number;
+  userId: string | null;
   addToFavorites: (product: Product) => void;
   removeFavorite: (productId: number) => void;
   isFavorite: (productId: number) => boolean;
-}
-
-function getFavoritesStorageKey() {
-  const user = useAuthStore.getState().user;
-  return user ? `favorites-storage-${user.id}` : `favorites-storage-guest`;
+  clearFavorites: () => void;
+  setUser: (userId: string | null) => void;
 }
 
 export const useFavoriteStore = create<FavoriteStore>()(
@@ -21,6 +18,11 @@ export const useFavoriteStore = create<FavoriteStore>()(
     (set, get) => ({
       products: [],
       quantity: 0,
+      userId: null,
+
+      setUser: (userId: string | null) => {
+        set({ userId })
+      },
       
       addToFavorites: (product) => {
         set((state) => {
@@ -49,9 +51,18 @@ export const useFavoriteStore = create<FavoriteStore>()(
       isFavorite: (productId) => {
         return get().products.some((item) => item.id === productId)
       },
+
+      clearFavorites: () => {
+        set({ products: [], quantity: 0 });
+      },
     }),
     {
-      name: getFavoritesStorageKey(),
+      // name: "favorites-storage-temp",
+      name: (() => {
+        const userId = localStorage.getItem("currentUserId")
+        return userId ? `favorites-storage-${userId}` : "favorites-storage-guest"
+      })(),
+      partialize: (state) => ({ products: state.products })
     }
   )
 );

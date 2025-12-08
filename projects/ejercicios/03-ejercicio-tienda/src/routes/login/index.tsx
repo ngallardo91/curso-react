@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema, type RegisterFormData } from '../../types/register';
 import { mockAuthService } from '../../services/mockAuthService';
 import { useState } from 'react';
+import { useLoginModalStore } from '../../store/loginModalStore';
 
 export const Route = createFileRoute('/login/')({
   component: RegisterComponent,
@@ -14,15 +15,20 @@ function RegisterComponent() {
     register,
     handleSubmit,
     watch,
+    trigger,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
+    mode: "onBlur",
   });
 
   const navigate = useNavigate();
   const password = watch("password");
 
   const [backendError, setBackendError] = useState("");
+  const [touchedFields, setTouchedFields] = useState<Set<keyof RegisterFormData>>(new Set())
+  const [validFields, setValidFields] = useState<Set<keyof RegisterFormData>>(new Set())
+
 
   // Calcular fortaleza de la contraseña
   const getPasswordStrength = (password: string = "") => {
@@ -41,6 +47,30 @@ function RegisterComponent() {
   };
 
   const passwordStrength = getPasswordStrength(password);
+
+  const handleBlur = async (field: keyof RegisterFormData) => {
+    const result = await trigger(field);
+
+    setTouchedFields(prev => new Set(prev).add(field));
+
+    if (result) {
+      setValidFields(prev => new Set(prev).add(field))
+    } else {
+      setValidFields(prev => {
+        const copy = new Set(prev);
+        copy.delete(field);
+        return copy;
+      })
+    }
+  }
+
+  const getInputBorder = (fieldName: keyof RegisterFormData) => {
+    if (!touchedFields.has(fieldName)) return "border-gray-300"
+    if (errors[fieldName]) return "border-red-500"
+    if (validFields.has(fieldName)) return "border-green-500"
+
+    return "border-gray-300"
+  }
   
   const onSubmit = async (data: RegisterFormData) => {
     setBackendError("");
@@ -88,6 +118,41 @@ function RegisterComponent() {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700 text-left">
+                  Correo electrónico
+                </label>
+                <input
+                  {...register("email")}
+                  type="email"
+                  placeholder="ejemplo@correo.com"
+                  onBlur={() => handleBlur("email")}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-colors duration-200 text-left ${getInputBorder("email")}`}
+                />
+                {errors.email && (
+                  <p className="text-red-600 text-sm font-medium flex items-center gap-1 text-left mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700 text-left">
+                  Nombre de Usuario
+                </label>
+                <input
+                  {...register("userName")}
+                  placeholder="Ingresa el nombre de usuario"
+                  onBlur={() => handleBlur("userName")}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-blue-500 focus:outline-none transition-colors duration-200 text-left ${getInputBorder("userName")}`}
+                />
+                {errors.userName && (
+                  <p className="text-red-600 text-sm font-medium flex items-center gap-1 text-left mt-1">
+                    {errors.userName.message}
+                  </p>
+                )}
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Nombre *
@@ -95,9 +160,8 @@ function RegisterComponent() {
                 <input
                   {...register('firstName')}
                   type="text"
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                    errors.firstName ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  onBlur={() => handleBlur("firstName")}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${getInputBorder("firstName")}`}
                   placeholder="Juan"
                 />
                 {errors.firstName && (
@@ -112,46 +176,12 @@ function RegisterComponent() {
                 <input
                   {...register('lastName')}
                   type="text"
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                    errors.lastName ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  onBlur={() => handleBlur("lastName")}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${getInputBorder("lastName")}`}
                   placeholder="Pérez"
                 />
                 {errors.lastName && (
                   <p className="text-red-600 text-sm mt-1">{errors.lastName.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700 text-left">
-                  Nombre de Usuario
-                </label>
-                <input
-                  {...register("userName")}
-                  placeholder="Ingresa el nombre de usuario"
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors duration-200 text-left"
-                />
-                {errors.userName && (
-                  <p className="text-red-600 text-sm font-medium flex items-center gap-1 text-left mt-1">
-                    {errors.userName.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700 text-left">
-                  Correo electrónico
-                </label>
-                <input
-                  {...register("email")}
-                  type="email"
-                  placeholder="ejemplo@correo.com"
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors duration-200 text-left"
-                />
-                {errors.email && (
-                  <p className="text-red-600 text-sm font-medium flex items-center gap-1 text-left mt-1">
-                    {errors.email.message}
-                  </p>
                 )}
               </div>
 
@@ -163,7 +193,8 @@ function RegisterComponent() {
                   type="password"
                   {...register("password")}
                   placeholder="Mínimo 6 caracteres"
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors duration-200 text-left"
+                  onBlur={() => handleBlur("password")}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-blue-500 focus:outline-none transition-colors duration-200 text-left ${getInputBorder("password")}`}
                 />
                 
                 {/* Medidor de fortaleza de contraseña */}
@@ -202,7 +233,8 @@ function RegisterComponent() {
                   type="password"
                   {...register("confirmPassword")}
                   placeholder="Repite tu contraseña"
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors duration-200 text-left"
+                  onBlur={() => handleBlur("confirmPassword")}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-blue-500 focus:outline-none transition-colors duration-200 text-left ${getInputBorder("confirmPassword")}`}
                 />
                 {errors.confirmPassword && (
                   <p className="text-red-600 text-sm font-medium flex items-center gap-1 text-left mt-1">
@@ -232,9 +264,16 @@ function RegisterComponent() {
 
             <p className="text-center text-sm text-gray-500 mt-4">
               ¿Ya tienes cuenta?{" "}
-              <a href="#" className="text-blue-500 hover:text-blue-600 font-semibold">
+              <button
+                type="button"
+                onClick={() => useLoginModalStore.getState().setOpenLogin(true)}
+                className="text-blue-500 hover:text-blue-600 font-semibold cursor-pointer"
+              >
+                Inicia Sesión
+              </button>
+              {/* <a href="#" className="text-blue-500 hover:text-blue-600 font-semibold">
                 Inicia sesión
-              </a>
+              </a> */}
             </p>
           </form>
         </div>

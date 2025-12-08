@@ -101,7 +101,7 @@ export const mockAuthService = {
 
     const newUser = {
       ...payload,
-      id: String(Date.now()),
+      id: payload.userName,
       role: payload.role ?? "user"
     }
 
