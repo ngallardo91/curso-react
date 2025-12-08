@@ -1,55 +1,54 @@
 import { z } from 'zod';
 
+const existingEmails = ["test@example.com", "admin@example.com", "user@test.com"];
+
+// Función para simular validación asíncrona en servidor
+const checkEmailExists = async (email: string): Promise<boolean> => {
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  return existingEmails.includes(email.toLowerCase());
+};
+
 export const registerSchema = z.object({
-  // Información personal
   firstName: z
     .string()
     .min(2, 'El nombre debe tener al menos 2 caracteres')
     .max(50, 'El nombre no puede exceder 50 caracteres'),
-  
+
   lastName: z
     .string()
     .min(2, 'El apellido debe tener al menos 2 caracteres')
     .max(50, 'El apellido no puede exceder 50 caracteres'),
-  
+
+  userName: z.string()
+    .min(1, "El usuario es obligatorio")
+    .min(8, "El usuario debe tener al menos 8 caracteres"),
+
   email: z
-    .string()
-    .email('Debe ser un email válido')
-    .min(1, 'El email es requerido'),
-  
-  phone: z
-    .string()
-    .regex(/^\+?[0-9]{10,15}$/, 'Debe ser un número de teléfono válido'),
-  
-  // Dirección de envío
-  address: z
-    .string()
-    .min(5, 'La dirección debe tener al menos 5 caracteres')
-    .max(100, 'La dirección no puede exceder 100 caracteres'),
-  
-  city: z
-    .string()
-    .min(2, 'La ciudad debe tener al menos 2 caracteres'),
-  
-  state: z
-    .string()
-    .min(2, 'El estado/provincia es requerido'),
-  
-  zipCode: z
-    .string()
-    .regex(/^[0-9]{4,10}$/, 'Código postal inválido'),
-  
-  // Método de pago
-  paymentMethod: z.enum(['credit_card', 'debit_card', 'paypal'], {
-    message: 'Selecciona un método de pago',
-  }),
-  
-  // Términos y condiciones
-  acceptTerms: z
-    .boolean()
-    .refine((val) => val === true, {
-      message: 'Debes aceptar los términos y condiciones',
+    .email({ message: "Email inválido" })
+    .min(1, "El email es obligatorio")
+    // Validación asíncrona con superRefine
+    .superRefine(async (email, ctx) => {
+      const exists = await checkEmailExists(email);
+
+      if (exists) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Este email ya está registrado",
+        });
+      }
     }),
+
+  password: z
+    .string()
+    .min(6, "La contraseña debe tener al menos 6 caracteres")
+    .regex(/[A-Z]/, "Debe contener al menos una mayúscula")
+    .regex(/[^a-zA-Z0-9]/, "Debe contener al menos un carácter especial"),
+
+  confirmPassword: z.string(),
+})
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
 });
 
 export type RegisterFormData = z.infer<typeof registerSchema>;

@@ -1,6 +1,14 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, redirect } from '@tanstack/react-router';
+import { useAuthStore } from '../store/authStore';
 
 export const Route = createFileRoute('/')({
+  beforeLoad: async () => {
+    const { isAuthenticated } = useAuthStore.getState()
+
+    if (!isAuthenticated) {
+      throw redirect({ to: "/register" })
+    }
+  },
   component: HomeComponent,
 });
 
@@ -16,6 +24,7 @@ function HomeComponent() {
       <div className="flex justify-center gap-4">
         <Link
           to="/products"
+          search={{ page: 1 }}
           className="bg-blue-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-500 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
         >
           Ver Productos

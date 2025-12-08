@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Product, CartItem } from '../types/product';
+import { useAuthStore } from './authStore';
 
 interface CartStore {
   items: CartItem[];
@@ -10,6 +11,11 @@ interface CartStore {
   clearCart: () => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
+}
+
+function getCartStorageKey() {
+  const user = useAuthStore.getState().user;
+  return user ? `cart-storage-${user.id}` : `cart-storage-guest`;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -76,7 +82,7 @@ export const useCartStore = create<CartStore>()(
       },
     }),
     {
-      name: 'cart-storage',
+      name: getCartStorageKey(),
     }
   )
 );

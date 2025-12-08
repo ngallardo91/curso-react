@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as CartRouteImport } from './routes/cart'
+import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as ProductsIndexRouteImport } from './routes/products/index'
@@ -19,9 +21,18 @@ import { Route as CategoriesIndexRouteImport } from './routes/categories/index'
 import { Route as ProductsProductIdRouteImport } from './routes/products/$productId'
 import { Route as CategoriesCategoryRouteImport } from './routes/categories/$category'
 
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedRoute = ProtectedRouteImport.update({
+  id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -68,6 +79,7 @@ const CategoriesCategoryRoute = CategoriesCategoryRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/unauthorized': typeof UnauthorizedRoute
   '/categories/$category': typeof CategoriesCategoryRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/categories': typeof CategoriesIndexRoute
@@ -79,6 +91,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/unauthorized': typeof UnauthorizedRoute
   '/categories/$category': typeof CategoriesCategoryRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/categories': typeof CategoriesIndexRoute
@@ -90,7 +103,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_protected': typeof ProtectedRoute
   '/cart': typeof CartRoute
+  '/unauthorized': typeof UnauthorizedRoute
   '/categories/$category': typeof CategoriesCategoryRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/categories/': typeof CategoriesIndexRoute
@@ -104,6 +119,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/cart'
+    | '/unauthorized'
     | '/categories/$category'
     | '/products/$productId'
     | '/categories'
@@ -115,6 +131,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/cart'
+    | '/unauthorized'
     | '/categories/$category'
     | '/products/$productId'
     | '/categories'
@@ -125,7 +142,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_protected'
     | '/cart'
+    | '/unauthorized'
     | '/categories/$category'
     | '/products/$productId'
     | '/categories/'
@@ -137,7 +156,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProtectedRoute: typeof ProtectedRoute
   CartRoute: typeof CartRoute
+  UnauthorizedRoute: typeof UnauthorizedRoute
   CategoriesCategoryRoute: typeof CategoriesCategoryRoute
   ProductsProductIdRoute: typeof ProductsProductIdRoute
   CategoriesIndexRoute: typeof CategoriesIndexRoute
@@ -149,11 +170,25 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cart': {
       id: '/cart'
       path: '/cart'
       fullPath: '/cart'
       preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof ProtectedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -217,7 +252,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProtectedRoute: ProtectedRoute,
   CartRoute: CartRoute,
+  UnauthorizedRoute: UnauthorizedRoute,
   CategoriesCategoryRoute: CategoriesCategoryRoute,
   ProductsProductIdRoute: ProductsProductIdRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,

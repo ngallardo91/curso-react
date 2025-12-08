@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Product } from '../types/product';
+import { useAuthStore } from './authStore';
 
 interface FavoriteStore {
   products: Product[];
@@ -8,6 +9,11 @@ interface FavoriteStore {
   addToFavorites: (product: Product) => void;
   removeFavorite: (productId: number) => void;
   isFavorite: (productId: number) => boolean;
+}
+
+function getFavoritesStorageKey() {
+  const user = useAuthStore.getState().user;
+  return user ? `favorites-storage-${user.id}` : `favorites-storage-guest`;
 }
 
 export const useFavoriteStore = create<FavoriteStore>()(
@@ -45,7 +51,7 @@ export const useFavoriteStore = create<FavoriteStore>()(
       },
     }),
     {
-      name: 'favorite-storage',
+      name: getFavoritesStorageKey(),
     }
   )
 );

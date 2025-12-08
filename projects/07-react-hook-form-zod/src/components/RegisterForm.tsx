@@ -55,7 +55,7 @@ export const RegisterForm = () => {
   });
 
   // Observar el valor de la contraseña en tiempo real
-  const password = watch("password");
+  const password = watch("password");   
 
   // Calcular fortaleza de la contraseña
   const getPasswordStrength = (password: string = "") => {

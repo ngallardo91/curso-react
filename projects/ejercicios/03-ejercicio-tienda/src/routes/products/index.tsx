@@ -83,7 +83,6 @@ function ProductsComponent() {
       <h1 className="text-3xl font-bold text-gray-900 mb-6">
         Todos los Productos
       </h1>
-
       <div className="flex flex-row h-10 gap-4 flex-nowrap">
         <div className="flex flex-row gap-2 w-1/4">
           <div className="flex flex-row gap-2 text-md items-center">
@@ -239,5 +238,5 @@ function ProductsComponent() {
         }
       </div>
     </div>
-  );
+  )
 }
