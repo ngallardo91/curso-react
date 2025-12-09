@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 
 function Header() {
@@ -9,37 +10,48 @@ function Header() {
 }
 
 function Juego({ maximo }) {
-  // TODO: Crear estados con useState para:
-  // - numeroJugador (el número que ingresa el jugador)
-  // - numeroMaquina (el número aleatorio generado)
-  // - resultado (el mensaje de resultado)
-  // - esCorrecto (booleano para indicar si adivinó o no)
+  const [numeroJugador, setNumeroJugador] = useState('');
+  const [numeroMaquina, setNumeroMaquina] = useState(() => Math.floor(Math.random() * maximo) + 1);
+  const [resultado, setResultado] = useState('');
+  const [esCorrecto, setEsCorrecto] = useState(false);
 
-  // TODO: Crear una función para manejar el cambio del input (actualizar numeroJugador)
-  // Pista: usa e.target.value y recuerda convertirlo a número.
+  const handleInputChange = (e) => {
+    setNumeroJugador(Number(e.target.value));
+  };
 
-  // TODO: Crear una función para verificar el número
-  // - Si el número del jugador es igual al número aleatorio => mostrar mensaje de acierto
-  // - Si no => mostrar mensaje de error
-  // - Siempre generar un nuevo número aleatorio con Math.floor(Math.random() * maximo) + 1
+  const verificarNumero = () => {
+    if (numeroJugador === numeroMaquina) {
+      setResultado('¡Felicidades! ¡Adivinaste el número!');
+      setEsCorrecto(true);
+    } else {
+      setResultado(`No acertaste. El número era ${numeroMaquina}. ¡Intenta de nuevo!`);
+      setEsCorrecto(false);
+    }
+    // Generar un nuevo número aleatorio
+    setNumeroMaquina(Math.floor(Math.random() * maximo) + 1);
+    // Limpiar el input
+    setNumeroJugador('');
+  };
 
   return (
     <div>
       <form>
-        {/* TODO: Input controlado para ingresar el número */}
         <input
           type="number"
           min="1"
           max={maximo}
           placeholder="Ingresa un número del 1 al 10"
+          value={numeroJugador}
+          onChange={handleInputChange}
         />
-        <button type="button">Adivinar</button>
+        <button type="button" onClick={verificarNumero}>Adivinar</button>
       </form>
 
-      {/* TODO: Mostrar el resultado con una clase dinámica si adivinó */}
-      <div className="resultado">
-        {/* Mostrar el mensaje del resultado aquí */}
-      </div>
+      {resultado && (
+        <div className={`resultado ${esCorrecto ? 'correcto' : 'incorrecto'}`}>
+          {resultado}
+        </div>
+      )}
     </div>
   );
 }
