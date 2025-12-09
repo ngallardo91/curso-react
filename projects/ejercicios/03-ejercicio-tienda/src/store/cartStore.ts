@@ -10,6 +10,7 @@ interface CartStore {
   clearCart: () => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
+  loadCart: (userId: string | null) => void;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -74,9 +75,21 @@ export const useCartStore = create<CartStore>()(
       getTotalItems: () => {
         return get().items.reduce((total, item) => total + item.quantity, 0);
       },
+
+      loadCart: (userId: string | null) => {
+        const key = userId ? `cart-storage-${userId}` : "cart-storage-guest";
+        const stored = localStorage.getItem(key);
+        
+        if (stored) {
+          set({ items: JSON.parse(stored).state.items })
+        } else {
+          set({ items: [] })
+        }
+      }
     }),
     {
-      name: 'cart-storage',
+      name: "cart-storage-temp",
+      partialize: (state) => ({ items: state.items })
     }
   )
 );

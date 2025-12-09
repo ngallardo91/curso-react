@@ -16,15 +16,22 @@ function HomeComponent() {
       <div className="flex justify-center gap-4">
         <Link
           to="/products"
-          className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+          search={{ page: 1 }}
+          className="bg-blue-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-500 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
         >
           Ver Productos
         </Link>
         <Link
           to="/categories"
-          className="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+          className="bg-purple-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-600 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
         >
           Explorar Categorías
+        </Link>
+        <Link
+          to="/favorites"
+          className="bg-red-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-600 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+        >
+          Favoritos
         </Link>
       </div>
       

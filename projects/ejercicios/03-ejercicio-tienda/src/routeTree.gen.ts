@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsIndexRouteImport } from './routes/products/index'
+import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as FavoritesIndexRouteImport } from './routes/favorites/index'
 import { Route as CheckoutIndexRouteImport } from './routes/checkout/index'
 import { Route as CategoriesIndexRouteImport } from './routes/categories/index'
 import { Route as ProductsProductIdRouteImport } from './routes/products/$productId'
@@ -30,6 +32,16 @@ const IndexRoute = IndexRouteImport.update({
 const ProductsIndexRoute = ProductsIndexRouteImport.update({
   id: '/products/',
   path: '/products/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginIndexRoute = LoginIndexRouteImport.update({
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritesIndexRoute = FavoritesIndexRouteImport.update({
+  id: '/favorites/',
+  path: '/favorites/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutIndexRoute = CheckoutIndexRouteImport.update({
@@ -60,6 +72,8 @@ export interface FileRoutesByFullPath {
   '/products/$productId': typeof ProductsProductIdRoute
   '/categories': typeof CategoriesIndexRoute
   '/checkout': typeof CheckoutIndexRoute
+  '/favorites': typeof FavoritesIndexRoute
+  '/login': typeof LoginIndexRoute
   '/products': typeof ProductsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +83,8 @@ export interface FileRoutesByTo {
   '/products/$productId': typeof ProductsProductIdRoute
   '/categories': typeof CategoriesIndexRoute
   '/checkout': typeof CheckoutIndexRoute
+  '/favorites': typeof FavoritesIndexRoute
+  '/login': typeof LoginIndexRoute
   '/products': typeof ProductsIndexRoute
 }
 export interface FileRoutesById {
@@ -79,6 +95,8 @@ export interface FileRoutesById {
   '/products/$productId': typeof ProductsProductIdRoute
   '/categories/': typeof CategoriesIndexRoute
   '/checkout/': typeof CheckoutIndexRoute
+  '/favorites/': typeof FavoritesIndexRoute
+  '/login/': typeof LoginIndexRoute
   '/products/': typeof ProductsIndexRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +108,8 @@ export interface FileRouteTypes {
     | '/products/$productId'
     | '/categories'
     | '/checkout'
+    | '/favorites'
+    | '/login'
     | '/products'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +119,8 @@ export interface FileRouteTypes {
     | '/products/$productId'
     | '/categories'
     | '/checkout'
+    | '/favorites'
+    | '/login'
     | '/products'
   id:
     | '__root__'
@@ -108,6 +130,8 @@ export interface FileRouteTypes {
     | '/products/$productId'
     | '/categories/'
     | '/checkout/'
+    | '/favorites/'
+    | '/login/'
     | '/products/'
   fileRoutesById: FileRoutesById
 }
@@ -118,6 +142,8 @@ export interface RootRouteChildren {
   ProductsProductIdRoute: typeof ProductsProductIdRoute
   CategoriesIndexRoute: typeof CategoriesIndexRoute
   CheckoutIndexRoute: typeof CheckoutIndexRoute
+  FavoritesIndexRoute: typeof FavoritesIndexRoute
+  LoginIndexRoute: typeof LoginIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
 }
 
@@ -142,6 +168,20 @@ declare module '@tanstack/react-router' {
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof ProductsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login/': {
+      id: '/login/'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorites/': {
+      id: '/favorites/'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout/': {
@@ -182,6 +222,8 @@ const rootRouteChildren: RootRouteChildren = {
   ProductsProductIdRoute: ProductsProductIdRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,
   CheckoutIndexRoute: CheckoutIndexRoute,
+  FavoritesIndexRoute: FavoritesIndexRoute,
+  LoginIndexRoute: LoginIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
 }
 export const routeTree = rootRouteImport

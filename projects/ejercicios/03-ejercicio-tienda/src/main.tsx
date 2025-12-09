@@ -17,6 +17,7 @@ const router = createRouter({
   routeTree,
   context: {
     queryClient,
+    openLogin: () => {},
   },
   defaultPreload: 'intent',
 });
