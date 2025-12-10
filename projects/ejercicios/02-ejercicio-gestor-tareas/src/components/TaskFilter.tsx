@@ -1,6 +1,8 @@
+import type { TaskFilter as FilterType } from "../types/task";
+
 interface Props {
-  filter: "todas" | "completadas" | "pendientes";
-  setFilter: (filtro: "todas" | "completadas" | "pendientes") => void;
+  filter: FilterType;
+  setFilter: (filtro: FilterType) => void;
 }
 
 export function TaskFilter({ filter, setFilter }: Props) {
@@ -9,7 +11,7 @@ export function TaskFilter({ filter, setFilter }: Props) {
       <span>Mostrar: </span>
       <select
         value={filter}
-        onChange={(e) => setFilter(e.target.value as "todas" | "completadas" | "pendientes")}
+        onChange={(e) => setFilter(e.target.value as FilterType)}
       >
         <option value="todas">Todas</option>
         <option value="completadas">Completadas</option>
