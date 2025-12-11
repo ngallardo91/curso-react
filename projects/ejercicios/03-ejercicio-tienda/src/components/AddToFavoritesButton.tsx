@@ -19,7 +19,7 @@ export const AddToFavoritesButton: React.FC<AddToFavoritesButtonProps> = ({ prod
           }
     };
 
-    const baseClasses = 'p-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 transform hover:scale-110 active:scale-95';
+    const baseClasses = 'p-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 transform hover:scale-110 active:scale-95 ';
     const colorClasses = esFavorito
           ? 'text-red-500 hover:text-red-600'
           : 'text-gray-400 hover:text-red-500';
