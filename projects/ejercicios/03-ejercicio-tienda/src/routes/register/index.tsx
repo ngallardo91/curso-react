@@ -7,11 +7,55 @@ export const Route = createFileRoute('/register/')({
   component: RegisterComponent,
 });
 
+const checkPasswordStrength = (password: string): { strength: number, message: string, color: string } => {
+    let score = 0;
+    const feedback = [];
+
+    if (password.length >= 8) {
+        score += 1;
+    } else {
+        feedback.push("Al menos 8 caracteres");
+    }
+    if (/[A-Z]/.test(password)) {
+        score += 1;
+    } else {
+        feedback.push("Al menos 1 mayúscula");
+    }
+    if (/[0-9]/.test(password)) {
+        score += 1;
+    } else {
+        feedback.push("Al menos 1 número");
+    }
+    if (/[^a-zA-Z0-9]/.test(password)) {
+        score += 1;
+    } else {
+        feedback.push("Al menos 1 símbolo");
+    }
+
+    const maxScore = 4;
+    const strength = (score / maxScore) * 100;
+
+    let color = 'bg-gray-300';
+    let message = 'Débil';
+    
+    if (score === 1) { color = 'bg-red-500'; message = 'Muy Débil'; }
+    else if (score === 2) { color = 'bg-orange-400'; message = 'Medio'; }
+    else if (score === 3) { color = 'bg-yellow-500'; message = 'Fuerte'; }
+    else if (score === 4) { color = 'bg-green-500'; message = 'Muy Fuerte'; }
+
+    return { 
+        strength, 
+        message, 
+        color 
+    };
+};
+
 function RegisterComponent() {
   
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormType>({
     resolver: zodResolver(registerSchema),
@@ -19,6 +63,9 @@ function RegisterComponent() {
       acceptNews: false,
     },
   });
+
+  const passwordValue = watch('password', '');
+  const passwordStrength = checkPasswordStrength(passwordValue);
   
   const onSubmit = async (data: RegisterFormType) => {
     // Simular procesamiento de pago
@@ -76,7 +123,7 @@ function RegisterComponent() {
                   )}
                 </div>
                 
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Password *
                   </label>
@@ -91,7 +138,45 @@ function RegisterComponent() {
                   {errors.password && (
                     <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
                   )}
-                </div>
+                </div> */}
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Password *
+                    </label>
+                    
+                    <input
+                        {...register('password')}
+                        type="password"
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                        errors.password ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                        placeholder="********"
+                    />
+                    
+                    {/* ⭐️ INDICADOR DE FORTALEZA DE CONTRASEÑA INTEGRADO ⭐️ */}
+                    {passwordValue && (
+                        <div className="mt-2">
+                        <div className="w-full h-2 rounded-full overflow-hidden bg-gray-200">
+                            <div 
+                            className={`h-full transition-all duration-300 ${passwordStrength.color}`} 
+                            // Ajusta el ancho según la fortaleza calculada (0% a 100%)
+                            style={{ width: `${passwordStrength.strength}%` }}
+                            />
+                        </div>
+                        
+                        {/* Mensaje de fortaleza (Débil, Medio, Fuerte) */}
+                        <p className={`text-xs mt-1 font-semibold ${passwordStrength.color.replace('bg-', 'text-')}`}>
+                            Fortaleza: {passwordStrength.message}
+                        </p>
+                        </div>
+                    )}
+
+                    {/* Mensaje de Error de Validación de Zod (Aparece si la fortaleza no cumple con Zod) */}
+                    {errors.password && (
+                        <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
+                    )}
+                    </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
