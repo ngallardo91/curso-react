@@ -85,7 +85,7 @@ function RegisterComponent() {
     // Simular procesamiento de pago
     await new Promise((resolve) => setTimeout(resolve, 2000));
    
-    alert('¡Cliente registrado con éxito!');
+    alert('¡Cliente registrado con éxito!'); //Confirmación visual al enviar
   };
   
   return (
