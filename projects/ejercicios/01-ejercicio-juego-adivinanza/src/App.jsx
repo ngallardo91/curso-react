@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 
 function Header() {
@@ -9,11 +10,51 @@ function Header() {
 }
 
 function Juego({ maximo }) {
-  // TODO: Crear estados con useState para:
-  // - numeroJugador (el número que ingresa el jugador)
-  // - numeroMaquina (el número aleatorio generado)
-  // - resultado (el mensaje de resultado)
-  // - esCorrecto (booleano para indicar si adivinó o no)
+  const [numeroJugador, setNumeroJugador] = useState('');
+  const [numeroMaquina, setNumeroMaquina] = useState(() =>
+    Math.floor(Math.random() * maximo) + 1
+  );
+  const [resultado, setResultado] = useState('');
+  const [esCorrecto, setEsCorrecto] = useState(null);
+  const [intentos, setIntentos] = useState(0);
+
+  const manejarCambio = (evento) => {
+    const valor = evento.target.value;
+    setNumeroJugador(valor === '' ? '' : Number(valor));
+  };
+
+  const verificarNumero = () => {
+    if (numeroJugador === '' || Number.isNaN(numeroJugador)) {
+      setResultado('Ingresá un número válido antes de jugar.');
+      setEsCorrecto(false);
+      return;
+    }
+
+    const acierto = numeroJugador === numeroMaquina;
+    setEsCorrecto(acierto);
+    setResultado(
+      acierto
+        ? `¡Correcto! El número era ${numeroMaquina}.`
+        : `Fallaste. La máquina eligió ${numeroMaquina}.`
+    );
+    setIntentos((prev) => prev + 1);
+
+    const nuevoNumero = Math.floor(Math.random() * maximo) + 1;
+    setNumeroMaquina(nuevoNumero);
+  };
+
+  const reiniciarJuego = () => {
+    setNumeroJugador('');
+    setNumeroMaquina(Math.floor(Math.random() * maximo) + 1);
+    setResultado('');
+    setEsCorrecto(null);
+    setIntentos(0);
+  };
+
+  const claseResultado =
+    esCorrecto === null
+      ? 'resultado'
+      : `resultado ${esCorrecto ? 'correcto' : 'incorrecto'}`;
 
   // TODO: Crear una función para manejar el cambio del input (actualizar numeroJugador)
   // Pista: usa e.target.value y recuerda convertirlo a número.
@@ -32,13 +73,28 @@ function Juego({ maximo }) {
           min="1"
           max={maximo}
           placeholder="Ingresa un número del 1 al 10"
+          value={numeroJugador}
+          onChange={manejarCambio}
         />
-        <button type="button">Adivinar</button>
+        <button type="button" onClick={verificarNumero}>
+          Adivinar
+        </button>
+        <button
+          type="button"
+          className="boton-secundario"
+          onClick={reiniciarJuego}
+        >
+          Reiniciar
+        </button>
       </form>
 
+      <div className="estadisticas">
+        Intentos realizados: <strong>{intentos}</strong>
+      </div>
+
       {/* TODO: Mostrar el resultado con una clase dinámica si adivinó */}
-      <div className="resultado">
-        {/* Mostrar el mensaje del resultado aquí */}
+      <div className={claseResultado}>
+        {resultado || 'Ingresa un número y probá suerte.'}
       </div>
     </div>
   );
