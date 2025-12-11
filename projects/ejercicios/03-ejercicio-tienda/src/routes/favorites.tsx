@@ -37,30 +37,34 @@ function FavoriteComponent() {
         <h1 className="text-3xl font-bold text-gray-900">
           Lista de Favoritos
         </h1>
+        <div> 
+          <div className="relative">
+              <Heart className="size-6 text-red-500" />
+              {/* Asumiendo que 'count' y 'items' se obtienen fuera de este snippet */}
+              {count > 0 && ( 
+                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full size-4 flex items-center justify-center">
+                      {count}
+                  </span>
+              )}
+            </div>
+        </div>
+        
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* <div className="lg:col-span-2 space-y-4">
+      {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-4">
           {items.map((item) => (
             <CartItemComponent key={item.product.id} item={item} />
           ))}
-        </div> */}
-        <div>
-          <div className="relative">
-            <Heart className="size-6 text-red-500" />
-            {count > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full size-4 flex items-center justify-center">
-                    {count}
-                </span>
-            )}
         </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {items?.map((item) => (
-                  <ProductCard key={item.id} product={item} />
-                ))}
-              </div>
+      </div> */}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+          {items?.map((item) => (
+              <ProductCard key={item.id} product={item} />
+          ))}
       </div>
+
     </div>
   );
 }
