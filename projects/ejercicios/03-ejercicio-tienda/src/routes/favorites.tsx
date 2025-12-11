@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useFavoriteStore } from '../store/favoriteStore';
 import { ProductCard } from '../components/ProductCard';
+import { Heart } from 'lucide-react';
 
 export const Route = createFileRoute('/favorites')({
   component: FavoriteComponent,
@@ -8,6 +9,7 @@ export const Route = createFileRoute('/favorites')({
 
 function FavoriteComponent() {
   const items = useFavoriteStore((state) => state.items);
+  const count = useFavoriteStore((state) => state.contadorFavoritos());
   
   if (items.length === 0) {
     return (
@@ -43,6 +45,16 @@ function FavoriteComponent() {
             <CartItemComponent key={item.product.id} item={item} />
           ))}
         </div> */}
+        <div>
+          <div className="relative">
+            <Heart className="size-6 text-red-500" />
+            {count > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full size-4 flex items-center justify-center">
+                    {count}
+                </span>
+            )}
+        </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {items?.map((item) => (
                   <ProductCard key={item.id} product={item} />
