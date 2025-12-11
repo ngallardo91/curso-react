@@ -62,7 +62,7 @@ function RootComponent() {
             </div>
             <Link
               to="/cart"
-              className="relative text-gray-700 hover:text-blue-600 transition-all duration-200 hover:scale-110"
+              className="relative text-gray-700 hover:text-blue-600 transition-all duration-200 hover:scale-110 animate-bounce"
             >
               <span className="text-2xl">🛒</span>
               {totalItems > 0 && (
