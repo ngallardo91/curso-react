@@ -1,14 +1,15 @@
 import type { Product } from '../types/product';
-import { useCartStore } from '../store/cartStore';
+// import { useCartStore } from '../store/cartStore';
 import { Link } from '@tanstack/react-router';
 import { AddToCartButton } from './AddToCartButton';
+import { AddToFavoritesButton } from './AddToFavoritesButton';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const addToCart = useCartStore((state) => state.addToCart);
+  // const addToCart = useCartStore((state) => state.addToCart);
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
@@ -41,6 +42,7 @@ export function ProductCard({ product }: ProductCardProps) {
           >
             Agregar
           </button> */}
+          <AddToFavoritesButton product={product}></AddToFavoritesButton>
           <AddToCartButton product={product} ></AddToCartButton>
         </div>
       </div>
