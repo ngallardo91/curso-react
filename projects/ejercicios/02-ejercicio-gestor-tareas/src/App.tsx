@@ -15,16 +15,39 @@ function App() {
 
   const [filter, setFilter] = useState<"todas" | "completadas" | "pendientes">("todas");
 
+  // Borra tarea
   const deleteTask = (id: number) => {
     setTasks(tasks.filter((t) => t.id !== id));
   };
 
+  // Marcar completada/pendiente
   const toggleTask = (id: number) => {
-    // TODO: cambiar el valor de completed de la tarea con ese id
+    const newTasks = tasks.map((task) => {
+      if (task.id === id) {
+        // Invertir el valor de completed conservando el resto del objeto
+        return { ...task, completed: !task.completed };
+      }
+      return task;
+    });
+    setTasks(newTasks);
   };
 
+  // Agregar nueva tarea
   const addTask = (title: string, priority: "baja" | "media" | "alta") => {
-    // TODO: agregar una nueva tarea con un id incremental
+    // Calcular ID nuevo (si no hay tareas, empieza en 1)
+    const maxId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) : 0;
+    const newId = maxId + 1;
+
+    // Crear el objeto
+    const newTask: Task = {
+      id: newId,
+      title: title,
+      priority: priority,
+      completed: false
+    };
+
+    // Agregar al array de forma inmutable
+    setTasks([...tasks, newTask]);
   };
 
   const filteredTasks = tasks.filter((task) => {
@@ -38,7 +61,11 @@ function App() {
       <h1>Gestor de Tareas</h1>
       <TaskCounter tasks={tasks} />
       <TaskFilter filter={filter} setFilter={setFilter} />
+      
+      {/* Conectamos la función addTask */}
       <TaskForm onAddTask={addTask} />
+      
+      {/* Conectamos toggleTask */}
       <TaskList tasks={filteredTasks} onDelete={deleteTask} onToggle={toggleTask} />
     </div>
   )

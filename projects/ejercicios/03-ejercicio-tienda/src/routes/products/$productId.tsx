@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+import { useCartStore } from '../../store/cartStore'; 
+import { useState } from 'react'; 
 
 export const Route = createFileRoute('/products/$productId')({
   component: ProductDetailComponent,
@@ -9,10 +11,27 @@ export const Route = createFileRoute('/products/$productId')({
 function ProductDetailComponent() {
   const { productId } = Route.useParams();
   
+  // Traigo solo la función addToCart del store.
+  const addToCart = useCartStore((state) => state.addToCart);
+
+  // Estado local para el feedback visual 
+  const [isAdded, setIsAdded] = useState(false);
+
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => productsApi.getById(Number(productId)),
   });
+  
+  const handleAddToCart = () => {
+    if (product) {
+      // 1. Llamo al método del store 
+      addToCart(product);
+
+      // 2. Feedback visual 
+      setIsAdded(true);
+      setTimeout(() => setIsAdded(false), 2000); // Vuelve a la normalidad en 2 seg
+    }
+  };
   
   if (isLoading) {
     return (
@@ -73,13 +92,15 @@ function ProductDetailComponent() {
           </p>
           
           <button
-            onClick={() => {
-              // TODO: Los alumnos deben implementar esta funcionalidad
-              alert('Esta funcionalidad debe ser implementada');
-            }}
-            className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg"
+            onClick={handleAddToCart}
+            disabled={isAdded} // Deshabilita mientras muestra el mensaje de éxito
+            className={`w-full py-4 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg 
+              ${isAdded 
+                ? 'bg-green-600 text-white cursor-default' // Estilo éxito
+                : 'bg-blue-600 text-white hover:bg-blue-700' // Estilo normal
+              }`}
           >
-            Agregar al Carrito
+            {isAdded ? '¡Agregado al Carrito! ✅' : 'Agregar al Carrito'}
           </button>
         </div>
       </div>
