@@ -4,6 +4,8 @@ import { productsApi } from '../../services/api';
 import { ProductCard } from '../../components/ProductCard';
 import { useProductFilters } from '../../services/useProductsFilters';
 import { useState } from 'react';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { ErrorMessage } from '../../components/ErrorMessage';
 
 export const Route = createFileRoute('/products/')({
   component: ProductsComponent,
@@ -35,19 +37,28 @@ function ProductsComponent() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-xl text-gray-600">Cargando productos...</div>
-      </div>
-    );
+    return <LoadingSpinner className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-4" />;
+    // return (
+    //   <div className="flex justify-center items-center min-h-[400px]">
+    //     <div className="text-xl text-gray-600">Cargando productos...</div>
+    //   </div>
+    // );
   }
   
   if (error) {
     return (
-      <div className="text-center text-red-600 py-8">
-        Error al cargar los productos
-      </div>
-    );
+            <div className="p-4 max-w-xl mx-auto mt-10">
+                <ErrorMessage 
+                    // El error contiene el mensaje del servidor o de TanStack Query
+                    message={`Error al cargar los productos`} 
+                />
+            </div>
+        );
+    // return (
+    //   <div className="text-center text-red-600 py-8">
+    //     Error al cargar los productos
+    //   </div>
+    // );
   }
 
   
