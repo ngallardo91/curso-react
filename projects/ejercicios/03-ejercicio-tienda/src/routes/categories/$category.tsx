@@ -1,8 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
-import { useCartStore } from '../../store/cartStore';
+// import { useCartStore } from '../../store/cartStore';
 import { AddToCartButton } from '../../components/AddToCartButton';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
 
 export const Route = createFileRoute('/categories/$category')({
   component: CategoryProductsComponent,
@@ -16,10 +17,11 @@ function CategoryProductsComponent() {
     queryFn: () => productsApi.getByCategory(category),
   });
 
-  const addToCart = useCartStore((state) => state.addToCart);
+  // const addToCart = useCartStore((state) => state.addToCart);
   
   if (isLoading) {
-    return <div className="text-center py-8">Cargando productos...</div>;
+    // return <div className="text-center py-8">Cargando productos...</div>;
+    return <LoadingSpinner className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-4" />;
   }
   
   return (

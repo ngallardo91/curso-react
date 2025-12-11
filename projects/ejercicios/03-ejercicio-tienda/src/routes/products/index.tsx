@@ -3,9 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
 import { ProductCard } from '../../components/ProductCard';
 import { useProductFilters } from '../../services/useProductsFilters';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { ErrorMessage } from '../../components/ErrorMessage';
+import { PaginationControls } from '../../components/PaginationControls';
 
 export const Route = createFileRoute('/products/')({
   component: ProductsComponent,
@@ -35,6 +36,22 @@ function ProductsComponent() {
     if (sortBy === 'mas-resenias') return b.rating.count - a.rating.count
     return 0;
   });
+
+  const PRODUCTS_PER_PAGE = 8;
+  const [currentPage, setCurrentPage] = useState(1);
+  const paginatedProducts = useMemo(() => {
+        const indexOfLastProduct = currentPage * PRODUCTS_PER_PAGE;
+        const indexOfFirstProduct = indexOfLastProduct - PRODUCTS_PER_PAGE;
+        
+        // Retorna solo la porción del array que corresponde a la página actual
+        return sortedProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+    }, [sortedProducts, currentPage]); // Se recalcula cuando la lista ordenada o la página cambian
+    
+    // CALCULA EL TOTAL DE PÁGINAS
+    const totalPages = Math.ceil(sortedProducts.length / PRODUCTS_PER_PAGE);
+
+
 
   if (isLoading) {
     return <LoadingSpinner className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-4" />;
@@ -104,10 +121,16 @@ function ProductsComponent() {
             </select>
         </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {sortedProducts?.map((product) => (
+        {paginatedProducts?.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
+
+      <PaginationControls 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
+            />
     </div>
   );
 }
