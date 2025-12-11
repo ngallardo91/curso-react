@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema, type RegisterFormType } from '../../types/register';
+import { CheckCircle } from 'lucide-react';
 
 export const Route = createFileRoute('/register/')({
   component: RegisterComponent,
@@ -64,6 +65,19 @@ function RegisterComponent() {
     },
   });
 
+  const [username, email, password, confirmPassword] = watch([
+      'username', 
+      'email', 
+      'password', 
+      'confirmPassword'
+  ]);
+
+  const isFieldComplete = (value: string | undefined, error: any) => 
+      !!value && !error;
+      
+  const isUsernameComplete = isFieldComplete(username, errors.username);
+  const isEmailComplete = isFieldComplete(email, errors.email);
+
   const passwordValue = watch('password', '');
   const passwordStrength = checkPasswordStrength(passwordValue);
   
@@ -92,6 +106,9 @@ function RegisterComponent() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Username *
+                    {isUsernameComplete && (
+                        <CheckCircle className="size-5 text-green-500" />
+                    )}
                   </label>
                   <input
                     {...register('username')}
@@ -109,6 +126,9 @@ function RegisterComponent() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Email *
+                    {isEmailComplete && (
+                        <CheckCircle className="size-5 text-green-500" />
+                    )}
                   </label>
                   <input
                     {...register('email')}
