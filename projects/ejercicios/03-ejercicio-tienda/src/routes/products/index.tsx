@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
 import { ProductCard } from '../../components/ProductCard';
 import { useProductFilters } from '../../services/useProductsFilters';
+import { useState } from 'react';
 
 export const Route = createFileRoute('/products/')({
   component: ProductsComponent,
@@ -13,6 +14,7 @@ function ProductsComponent() {
     queryKey: ['products'],
     queryFn: productsApi.getAll,
   });
+  const [sortBy, setSortBy] = useState('none')
   
   const productsToFilter = products || [];
 
@@ -24,6 +26,13 @@ function ProductsComponent() {
         resetFilters
     } = useProductFilters(productsToFilter);
 
+  const sortedProducts = [...(filteredProducts || [])].sort((a, b) => {
+    if (sortBy === 'price-asc') return a.price - b.price;
+    if (sortBy === 'price-desc') return b.price - a.price;
+    if (sortBy === 'mejor-valorados') return b.rating.rate - a.rating.rate
+    if (sortBy === 'mas-resenias') return b.rating.count - a.rating.count
+    return 0;
+  });
 
   if (isLoading) {
     return (
@@ -73,8 +82,18 @@ function ProductsComponent() {
                     Resetear Filtros
                 </button>
       </div>
+      <div>
+            {/* Componente que cambia el estado sortBy */}
+            <select onChange={(e) => setSortBy(e.target.value)}>
+                <option value="none">Ordenar por...</option>
+                <option value="price-asc">Precio: Menor a Mayor</option>
+                <option value="price-desc">Precio: Mayor a Menor</option>
+                <option value="mejor-valorados">Mejor valorados</option>
+                <option value="mas-resenias">Más comentarios</option>
+            </select>
+        </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredProducts?.map((product) => (
+        {sortedProducts?.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
