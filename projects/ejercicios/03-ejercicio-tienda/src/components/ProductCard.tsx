@@ -13,6 +13,7 @@ export function ProductCard({ product }: ProductCardProps) {
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
+      
       <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
         <img
           src={product.image}
