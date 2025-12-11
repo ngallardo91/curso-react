@@ -1,4 +1,5 @@
 import { ProductSkeleton } from "./ProductSkeleton";
+import { ProductSkeletonPulso } from "./ProductSkeletonPulsos";
 
 // ⭐️ EL COMPONENTE REUTILIZABLE PRINCIPAL ⭐️
 interface LoadingSpinnerProps {
@@ -18,7 +19,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     <div className={className}>
       {/* Crea un array de N elementos y mapea el esqueleto en cada uno */}
       {[...Array(count)].map((_, index) => (
-        <ProductSkeleton key={index} />
+        <ProductSkeletonPulso key={index} />
       ))}
     </div>
   );
