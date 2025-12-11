@@ -43,7 +43,7 @@ function CategoryProductsComponent() {
             <img
               src={product.image}
               alt={product.title}
-              className="w-full h-48 object-contain mb-4"
+     className="w-full h-48 object-contain p-4 bg-white transition-transform duration-300 hover:scale-110"
             />
             <h3 className="text-lg font-semibold mb-2 line-clamp-2">
               {product.title}

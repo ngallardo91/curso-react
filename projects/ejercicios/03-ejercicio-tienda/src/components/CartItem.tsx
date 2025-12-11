@@ -14,7 +14,7 @@ export function CartItemComponent({ item }: CartItemProps) {
       <img
         src={item.product.image}
         alt={item.product.title}
-        className="w-24 h-24 object-contain transition-transform duration-200 hover:scale-110"
+     className="w-full h-48 object-contain p-4 bg-white transition-transform duration-300 hover:scale-110"
       />
       <div className="flex-1">
         <h3 className="text-lg font-semibold text-gray-900 mb-1">

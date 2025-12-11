@@ -59,7 +59,7 @@ function ProductDetailComponent() {
           <img
             src={product.image}
             alt={product.title}
-            className="max-h-96 object-contain"
+     className="w-full h-48 object-contain p-4 bg-white transition-transform duration-300 hover:scale-110"
           />
         </div>
         

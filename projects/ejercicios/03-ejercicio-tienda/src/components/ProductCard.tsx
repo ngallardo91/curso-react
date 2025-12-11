@@ -18,7 +18,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <img
           src={product.image}
           alt={product.title}
-          className="w-full h-48 object-contain p-4 bg-white transition-transform duration-300 hover:scale-110"
+     className="w-full h-48 object-contain p-4 bg-white transition-transform duration-300 hover:scale-110"
         />
       </Link>
       <div className="p-4">
