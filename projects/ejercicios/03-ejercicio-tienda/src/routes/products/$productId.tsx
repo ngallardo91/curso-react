@@ -1,6 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+import { useCartStore } from '../../store/cartStore';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { ErrorMessage } from '../../components/ErrorMessage';
 
 export const Route = createFileRoute('/products/$productId')({
   component: ProductDetailComponent,
@@ -13,21 +16,33 @@ function ProductDetailComponent() {
     queryKey: ['product', productId],
     queryFn: () => productsApi.getById(Number(productId)),
   });
+
+  const addToCart = useCartStore((state) => state.addToCart);
+  
   
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-xl text-gray-600">Cargando producto...</div>
-      </div>
-    );
+    return <LoadingSpinner className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-4" />;
+    // return (
+    //   <div className="flex justify-center items-center min-h-[400px]">
+    //     <div className="text-xl text-gray-600">Cargando producto...</div>
+    //   </div>
+    // );
   }
   
   if (error || !product) {
+    // return (
+    //   <div className="text-center text-red-600 py-8">
+    //     Error al cargar el producto
+    //   </div>
+    // );
     return (
-      <div className="text-center text-red-600 py-8">
-        Error al cargar el producto
-      </div>
-    );
+            <div className="p-4 max-w-xl mx-auto mt-10">
+                <ErrorMessage 
+                    // El error contiene el mensaje del servidor o de TanStack Query
+                    message={`Error al cargar los productos`} 
+                />
+            </div>
+        );
   }
   
   return (
@@ -44,7 +59,7 @@ function ProductDetailComponent() {
           <img
             src={product.image}
             alt={product.title}
-            className="max-h-96 object-contain"
+     className="w-full h-48 object-contain p-4 bg-white transition-transform duration-300 hover:scale-110"
           />
         </div>
         
@@ -75,7 +90,9 @@ function ProductDetailComponent() {
           <button
             onClick={() => {
               // TODO: Los alumnos deben implementar esta funcionalidad
-              alert('Esta funcionalidad debe ser implementada');
+              // alert('Esta funcionalidad debe ser implementada');
+              addToCart(product)
+              alert('Producto agregado correctamente!');
             }}
             className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg"
           >

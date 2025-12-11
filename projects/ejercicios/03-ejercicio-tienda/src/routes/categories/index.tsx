@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
 
 export const Route = createFileRoute('/categories/')({
   component: CategoriesComponent,
@@ -13,7 +14,8 @@ function CategoriesComponent() {
   });
   
   if (isLoading) {
-    return <div className="text-center py-8">Cargando categorías...</div>;
+    // return <div className="text-center py-8">Cargando categorías...</div>;
+    return <LoadingSpinner className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-4" />;
   }
   
   return (
