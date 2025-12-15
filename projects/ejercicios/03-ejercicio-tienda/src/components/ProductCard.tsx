@@ -1,6 +1,8 @@
 import type { Product } from '../types/product';
 import { useCartStore } from '../store/cartStore';
 import { Link } from '@tanstack/react-router';
+import toast from 'react-hot-toast';
+import { useFavoritesStore } from '../store/favoritesStore';
 
 interface ProductCardProps {
   product: Product;
@@ -8,9 +10,34 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart);
+  const addFavorite = useFavoritesStore((state) => state.addFavorite);
+  const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
+  const isFavorite = useFavoritesStore((state) => state.isFavorite(product.id));
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product);
+      toast.success('Producto agregado al carrito.');
+    }
+  };
+
+  const handleFavoriteClick = () => {
+    if (product) {
+      if(isFavorite){ removeFavorite(product.id) } 
+      else { addFavorite(product) };
+    }
+  }
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
+      <div className="flex justify-end items-center">
+        <button
+          onClick={handleFavoriteClick}
+          className="text-2xl p-2 hover:text-red-600 transition-colors duration-200"
+        >
+          {isFavorite ? '❤️' : '🤍'}
+        </button>
+      </div>
       <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
         <img
           src={product.image}
@@ -35,7 +62,7 @@ export function ProductCard({ product }: ProductCardProps) {
             ${product.price.toFixed(2)}
           </span>
           <button
-            onClick={() => addToCart(product)}
+            onClick={handleAddToCart}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium"
           >
             Agregar

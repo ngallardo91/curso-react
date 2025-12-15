@@ -4,10 +4,10 @@ export const ProductList = () => {
   //const { products, fetchProducts, clearProducts, loading } =
   //  useProductStore();
 
-    const products = useProductStore(state => state.products)
-    const loading = useProductStore(state => state.loading)
-    const fetchProducts = useProductStore(state => state.fetchProducts)
-    const clearProducts = useProductStore(state => state.clearProducts)
+  const products = useProductStore(state => state.products)
+  const loading = useProductStore(state => state.loading)
+  const fetchProducts = useProductStore(state => state.fetchProducts)
+  const clearProducts = useProductStore(state => state.clearProducts)
 
   return (
     <div style={{ padding: "1rem", border: "1px solid #ccc", borderRadius: "8px" }}>
