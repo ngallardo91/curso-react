@@ -36,3 +36,6 @@
 }
 
 /* TODO: pueden agregar más estilos personalizados aquí */
+button {
+  cursor: pointer;
+}

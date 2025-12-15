@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useCartStore } from '../store/cartStore';
 import { CartItemComponent } from '../components/CartItem';
+import toast from 'react-hot-toast';
 
 export const Route = createFileRoute('/cart')({
   component: CartComponent,
@@ -10,6 +11,11 @@ function CartComponent() {
   const items = useCartStore((state) => state.items);
   const totalPrice = useCartStore((state) => state.getTotalPrice());
   const clearCart = useCartStore((state) => state.clearCart);
+
+  const handleClearCart = () => {
+    clearCart();
+    toast.success('Carrito vaciado.');
+  }
   
   if (items.length === 0) {
     return (
@@ -38,7 +44,7 @@ function CartComponent() {
           Carrito de Compras
         </h1>
         <button
-          onClick={clearCart}
+          onClick={handleClearCart}
           className="text-red-600 hover:text-red-700 font-semibold"
         >
           Vaciar Carrito
