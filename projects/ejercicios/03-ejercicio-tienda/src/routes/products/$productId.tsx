@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+// Tarea 1, paso 1
+import { useCartStore } from '../../store/cartStore';
 
 export const Route = createFileRoute('/products/$productId')({
   component: ProductDetailComponent,
@@ -13,6 +15,12 @@ function ProductDetailComponent() {
     queryKey: ['product', productId],
     queryFn: () => productsApi.getById(Number(productId)),
   });
+
+
+// Tarea 1, paso 2
+  const addToCart = useCartStore((state) => state.addToCart);
+
+
   
   if (isLoading) {
     return (
@@ -73,9 +81,9 @@ function ProductDetailComponent() {
           </p>
           
           <button
-            onClick={() => {
-              // TODO: Los alumnos deben implementar esta funcionalidad
-              alert('Esta funcionalidad debe ser implementada');
+            onClick={() => { addToCart(product)
+              // Tarea 1, paso 3.
+              
             }}
             className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg"
           >
