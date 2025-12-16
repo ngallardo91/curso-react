@@ -1,3 +1,4 @@
+import { useState } from "react"; 
 import './App.css';
 
 function Header() {
@@ -15,13 +16,48 @@ function Juego({ maximo }) {
   // - resultado (el mensaje de resultado)
   // - esCorrecto (booleano para indicar si adivinó o no)
 
+    // Estados
+  const [numeroJugador, setNumeroJugador] = useState("");
+  const [numeroMaquina, setNumeroMaquina] = useState("");
+    
+  const [resultado, setResultado] = useState("");
+  const [esCorrecto, setEsCorrecto] = useState(false);
+
   // TODO: Crear una función para manejar el cambio del input (actualizar numeroJugador)
   // Pista: usa e.target.value y recuerda convertirlo a número.
+
+// Manejar cambio del input
+  const manejarCambio = (e) => 
+  {
+    setNumeroJugador(Number(e.target.value));
+  };
 
   // TODO: Crear una función para verificar el número
   // - Si el número del jugador es igual al número aleatorio => mostrar mensaje de acierto
   // - Si no => mostrar mensaje de error
   // - Siempre generar un nuevo número aleatorio con Math.floor(Math.random() * maximo) + 1
+
+ // Verificar número
+
+  const verificarNumero = () => 
+    {
+    
+      
+      const numeroAleatorio = Math.floor(Math.random() * maximo) + 1;
+    setNumeroMaquina(numeroAleatorio);
+    
+        
+    if (numeroJugador === numeroAleatorio) 
+      {
+      setResultado("¡Correcto! Adivinaste el número.");
+      setEsCorrecto(true);
+    } else 
+      {
+      setResultado(`Fallaste. El número era ${numeroAleatorio}.`);
+      setEsCorrecto(false);
+    }
+  };
+
 
   return (
     <div>
@@ -31,15 +67,23 @@ function Juego({ maximo }) {
           type="number"
           min="1"
           max={maximo}
-          placeholder="Ingresa un número del 1 al 10"
+          placeholder="Ingresa un número del 1 al ${maximo}"
+          value={numeroJugador}
+          onChange={manejarCambio}
         />
-        <button type="button">Adivinar</button>
+        <button type="button" onClick={verificarNumero}>
+          Adivinar
+        </button>
+
       </form>
 
-      {/* TODO: Mostrar el resultado con una clase dinámica si adivinó */}
-      <div className="resultado">
-        {/* Mostrar el mensaje del resultado aquí */}
-      </div>
+
+      {resultado && (
+        <div className={`resultado ${esCorrecto ? "correcto" : "incorrecto"}`}>
+          {resultado}
+        </div>
+      )}
+      
     </div>
   );
 }
