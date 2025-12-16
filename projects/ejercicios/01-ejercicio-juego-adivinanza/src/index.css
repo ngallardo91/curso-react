@@ -1,8 +1,14 @@
+
+/* ------------------------------ */
+/* Base Vite + variables de color */
+/* ------------------------------ */
 :root {
+  /* Tipografía y render */
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
+  /* Tema base */
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
@@ -11,6 +17,30 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* 🎨 Variables del juego */
+  --app-max-width: 640px;
+  --surface-bg: #ffffff;
+  --surface-fg: #213547;
+  --surface-shadow: 0 10px 25px rgba(0,0,0,0.08);
+
+  --input-border: #d1d5db;
+  --input-bg: #ffffff;
+
+  --btn-bg: #2563eb;
+  --btn-fg: #ffffff;
+  --btn-bg-disabled: #9ca3af;
+
+  --resultado-border: #e5e7eb;
+  --resultado-bg: #f9fafb;
+
+  --ok-border: #86efac;
+  --ok-bg: #ecfdf5;
+  --ok-fg: #065f46;
+
+  --error-border: #fecaca;
+  --error-bg: #fef2f2;
+  --error-fg: #7f1d1d;
 }
 
 a {
@@ -44,7 +74,7 @@ button {
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, background-color 0.25s, color 0.25s, opacity 0.2s;
 }
 button:hover {
   border-color: #646cff;
@@ -54,15 +84,154 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* ------------------ */
+/* Modo claro preferido */
+/* ------------------ */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
+
+    /* override para modo claro */
+    --surface-bg: #ffffff;
+    --surface-fg: #213547;
+    --input-bg: #ffffff;
+
+    --resultado-bg: #f9fafb;
   }
   a:hover {
     color: #747bff;
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+/* ----------------------------- */
+/* Contenedor de la app (tarjeta) */
+/* ----------------------------- */
+.App {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--app-max-width);
+  margin: 24px auto;
+  padding: 24px;
+  background: var(--surface-bg);
+  color: var(--surface-fg);
+  border-radius: 12px;
+  box-shadow: var(--surface-shadow);
+}
+
+/* Header y footer básicos */
+header {
+  margin-bottom: 16px;
+}
+header h1 {
+  margin: 0;
+}
+footer {
+  margin-top: 16px;
+  opacity: 0.85;
+}
+
+/* -------------------------- */
+/* Formulario del juego       */
+/* -------------------------- */
+form {
+  display: grid;
+  gap: 12px;
+}
+
+input[type="number"] {
+  padding: 10px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--input-bg);
+  color: inherit;
+}
+
+button[type="button"] {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: none; /* usamos el color del botón por defecto */
+}
+button[type="button"][disabled] {
+  background: var(--btn-bg-disabled);
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+/* -------------------------- */
+/* Resultado con clases dinámicas */
+/* -------------------------- */
+.resultado {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--resultado-border);
+  background: var(--resultado-bg);
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+/* acierto */
+.resultado--correcto {
+  border-color: var(--ok-border);
+  background: var(--ok-bg);
+  color: var(--ok-fg);
+  font-weight: 600;
+}
+
+/* falla */
+.resultado--incorrecto {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+  color: var(--error-fg);
+  font-weight: 600;
+}
+
+/* -------------------------- */
+/* Ajustes para modo oscuro   */
+/* -------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-bg: #1e1e1e;
+    --surface-fg: #e7e9ee;
+    --surface-shadow: 0 10px 25px rgba(0,0,0,0.35);
+
+    --input-border: #3a3a3a;
+    --input-bg: #151515;
+
+    --btn-bg: #3b82f6;          /* azul más brillante en dark */
+    --btn-fg: #ffffff;
+    --btn-bg-disabled: #6b7280; /* gris */
+
+    --resultado-border: #2a2a2a;
+    --resultado-bg: #151515;
+
+    --ok-border: #22c55e;
+    --ok-bg: #052e1b;  /* verde muy oscuro para contraste */
+    --ok-fg: #a7f3d0;
+
+    --error-border: #ef4444;
+    --error-bg: #2b0b0b; /* rojo muy oscuro para contraste */
+    --error-fg: #fecaca;
+  }
+
+  .App {
+    background: var(--surface-bg);
+    color: var(--surface-fg);
+  }
+
+  input[type="number"] {
+    background: var(--input-bg);
+    border-color: var(--input-border);
+  }
+
+  .resultado {
+    border-color: var(--resultado-border);
+    background: var(--resultado-bg);
   }
 }
