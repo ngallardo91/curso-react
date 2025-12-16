@@ -1,19 +1,27 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+import { useCartStore } from '../../store/cartStore';
+import { useState } from 'react';
 
 export const Route = createFileRoute('/products/$productId')({
   component: ProductDetailComponent,
 });
 
-function ProductDetailComponent() {
+function ProductDetailComponent() 
+{
+
   const { productId } = Route.useParams();
-  
+
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => productsApi.getById(Number(productId)),
   });
-  
+ 
+   const addToCart = useCartStore((state) => state.addToCart);
+const [added, setAdded] = useState(false);
+
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
@@ -75,11 +83,27 @@ function ProductDetailComponent() {
           <button
             onClick={() => {
               // TODO: Los alumnos deben implementar esta funcionalidad
-              alert('Esta funcionalidad debe ser implementada');
+              //alert('Esta funcionalidad debe ser implementada');
+             addToCart(product);
+              setAdded(true);
+
+              setTimeout(() => {
+                setAdded(false);
+              }, 1500);
+
+
             }}
-            className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg"
+            //className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg"
+            
+          className={`w-full py-4 rounded-lg font-semibold transition-all duration-200 transform active:scale-95 shadow-lg text-lg
+              ${
+                added
+                  ? 'bg-green-600 text-white'
+                  : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105'
+              }
+            `}
           >
-            Agregar al Carrito
+            {added ? '¡Agregado!' : 'Agregar al Carrito'}
           </button>
         </div>
       </div>
