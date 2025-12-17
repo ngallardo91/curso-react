@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
 // paso 1 tarea 2
 import { useCartStore } from '../../store/cartStore';
+import LoadingSpinner from '../../components/LoadingSpinner'
 
 export const Route = createFileRoute('/categories/$category')({
   component: CategoryProductsComponent,
@@ -13,13 +14,17 @@ function CategoryProductsComponent() {
   // paso 2 tarea 2
   const addToCart = useCartStore((state) => state.addToCart);
 
-  const { data: products, isLoading } = useQuery({
+
+  const {
+    data: products,isLoading,refetch, isFetching,
+  } = useQuery({
     queryKey: ['products', 'category', category],
     queryFn: () => productsApi.getByCategory(category),
   });
 
+
   if (isLoading) {
-    return <div className="text-center py-8">Cargando productos...</div>;
+    return <div className="text-center py-8"> <LoadingSpinner /></div>;
   }
 
   return (
@@ -51,7 +56,7 @@ function CategoryProductsComponent() {
             </p>
             {/* paso 3 tarea 2 */}
 
-           
+
             <button
               type="button"
               onClick={() => addToCart(product)}

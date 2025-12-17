@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+import LoadingSpinner from '../../components/LoadingSpinner'
+import ErrorMessage from '../../components/ErrorMessage'
 // Tarea 1, paso 1
 import { useCartStore } from '../../store/cartStore';
 
@@ -11,7 +13,7 @@ export const Route = createFileRoute('/products/$productId')({
 function ProductDetailComponent() {
   const { productId } = Route.useParams();
   
-  const { data: product, isLoading, error } = useQuery({
+  const { data: isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => productsApi.getById(Number(productId)),
   });
@@ -25,15 +27,15 @@ function ProductDetailComponent() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-xl text-gray-600">Cargando producto...</div>
+        <LoadingSpinner />
       </div>
     );
   }
   
-  if (error || !product) {
+  if (error || !productId) {
     return (
       <div className="text-center text-red-600 py-8">
-        Error al cargar el producto
+        <ErrorMessage />
       </div>
     );
   }
@@ -50,38 +52,38 @@ function ProductDetailComponent() {
       <div className="bg-white rounded-lg shadow-lg p-8 grid grid-cols-1 md:grid-cols-2 gap-8 animate-fadeIn">
         <div className="flex items-center justify-center">
           <img
-            src={product.image}
-            alt={product.title}
+            src={productId.image}
+            alt={productId.title}
             className="max-h-96 object-contain"
           />
         </div>
         
         <div>
           <span className="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full mb-4 capitalize">
-            {product.category}
+            {productId.category}
           </span>
           
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            {product.title}
+            {productId.title}
           </h1>
           
           <div className="flex items-center mb-4">
             <span className="text-yellow-500 text-xl">⭐</span>
             <span className="text-lg text-gray-700 ml-2">
-              {product.rating.rate} <span className="text-gray-500">({product.rating.count} reviews)</span>
+              {productId.rating.rate} <span className="text-gray-500">({productId.rating.count} reviews)</span>
             </span>
           </div>
           
           <p className="text-4xl font-bold text-blue-600 mb-6">
-            ${product.price.toFixed(2)}
+            ${productId.price.toFixed(2)}
           </p>
           
           <p className="text-gray-700 mb-8 leading-relaxed">
-            {product.description}
+            {productId.description}
           </p>
           
           <button
-            onClick={() => { addToCart(product)
+            onClick={() => { addToCart(productId)
               // Tarea 1, paso 3.
               
             }}

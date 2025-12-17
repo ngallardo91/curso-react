@@ -5,7 +5,12 @@ import { useQuery } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { productsApi } from '../../services/api'
 import { ProductCard } from '../../components/ProductCard'
+import LoadingSpinner from '../../components/LoadingSpinner'
+import ErrorMessage from '../../components/ErrorMessage'
 import type { Product } from '../../types/product'
+
+
+
 
 // Criterios de orden disponibles (actualizados)
 type SortBy = 'price_asc' | 'price_desc' | 'rating_desc' | 'rating_count_desc'
@@ -15,7 +20,7 @@ export const Route = createFileRoute('/products/')({
 })
 
 function ProductsComponent() {
-  const { data: products = [], isLoading, error } = useQuery<Product[]>({
+  const { data: products = [], isLoading, isError, error, refetch, isFetching } = useQuery<Product[]>({
     queryKey: ['products'],
     queryFn: productsApi.getAll,
   })
@@ -99,7 +104,7 @@ function ProductsComponent() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-xl text-gray-600">Cargando productos...</div>
+        <LoadingSpinner />
       </div>
     )
   }
@@ -107,7 +112,7 @@ function ProductsComponent() {
   if (error) {
     return (
       <div className="text-center text-red-600 py-8">
-        Error al cargar los productos
+        <ErrorMessage />
       </div>
     )
   }
