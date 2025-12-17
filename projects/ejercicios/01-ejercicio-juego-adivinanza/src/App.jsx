@@ -1,4 +1,5 @@
 import './App.css';
+import { useState } from 'react';
 
 function Header() {
   return (
@@ -9,36 +10,67 @@ function Header() {
 }
 
 function Juego({ maximo }) {
-  // TODO: Crear estados con useState para:
-  // - numeroJugador (el número que ingresa el jugador)
-  // - numeroMaquina (el número aleatorio generado)
-  // - resultado (el mensaje de resultado)
-  // - esCorrecto (booleano para indicar si adivinó o no)
+   // 1) Estados
+  const [numeroJugador, setNumeroJugador] = useState(''); // al principio vacío
+  const [numeroMaquina, setNumeroMaquina] = useState(
+    Math.floor(Math.random() * maximo) + 1
+  );
+  const [resultado, setResultado] = useState(''); // mensaje para mostrar
+  const [esCorrecto, setEsCorrecto] = useState(false); // si acertó o no
 
-  // TODO: Crear una función para manejar el cambio del input (actualizar numeroJugador)
-  // Pista: usa e.target.value y recuerda convertirlo a número.
+  // 2) Manejo del cambio del input
+  const handleChange = (e) => {
+    // convertimos a número; si el campo queda vacío, dejamos ''
+    const valor = e.target.value;
+    setNumeroJugador(valor === '' ? '' : Number(valor));
+  };
 
-  // TODO: Crear una función para verificar el número
-  // - Si el número del jugador es igual al número aleatorio => mostrar mensaje de acierto
-  // - Si no => mostrar mensaje de error
-  // - Siempre generar un nuevo número aleatorio con Math.floor(Math.random() * maximo) + 1
+  // 3) Verificar el número
+  const verificarNumero = () => {
+    // Solo procedemos si hay un número válido
+    if (numeroJugador === '' || isNaN(numeroJugador)) {
+      setResultado('Por favor ingresa un número válido.');
+      setEsCorrecto(false);
+      return;
+    }
 
+    if (numeroJugador === numeroMaquina) {
+      setResultado(`¡Correcto! El número era ${numeroMaquina}.`);
+      setEsCorrecto(true);
+    } else {
+      setResultado(
+        `Fallaste. El número era ${numeroMaquina}. ¡Intentá de nuevo!`
+      );
+      setEsCorrecto(false);
+    }
+
+    // Generar un nuevo número aleatorio para el siguiente intento
+    const nuevoAleatorio = Math.floor(Math.random() * maximo) + 1;
+    setNumeroMaquina(nuevoAleatorio);
+
+    // Opcional: resetear input si querés
+    setNumeroJugador('');
+  };
+  
   return (
     <div>
-      <form>
-        {/* TODO: Input controlado para ingresar el número */}
+      <form onSubmit={(e) => e.preventDefault()}>
         <input
           type="number"
           min="1"
           max={maximo}
           placeholder="Ingresa un número del 1 al 10"
+          value={numeroJugador}
+          onChange={handleChange}
         />
-        <button type="button">Adivinar</button>
+        <button type="button" onClick={verificarNumero}>
+          Adivinar
+        </button>
       </form>
 
       {/* TODO: Mostrar el resultado con una clase dinámica si adivinó */}
-      <div className="resultado">
-        {/* Mostrar el mensaje del resultado aquí */}
+      <div className={`resultado ${esCorrecto ? 'correcto' : 'incorrecto'}`}>
+        {resultado}
       </div>
     </div>
   );

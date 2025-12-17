@@ -40,3 +40,25 @@
 .read-the-docs {
   color: #888;
 }
+
+/* --- reglas nuevas para el resultado del juego --- */
+
+.resultado {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  display: inline-block;
+}
+
+.correcto {
+  color: #0b6623;          /* verde oscuro */
+  background-color: #d4f4dd; /* verde claro */
+  font-weight: bold;
+}
+
+.incorrecto {
+  color: #a00;             /* rojo oscuro */
+  background-color: #f8d7da; /* rojo claro */
+  font-weight: bold;
+}
