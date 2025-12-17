@@ -30,7 +30,7 @@ function CategoryDetailPage() {
 
   if (isLoading) return <ProductSkeleton count={4} />;
   if (error) return <ErrorMessage message="Error al cargar los productos por categoría." />;
-
+//prueba
   return (
     <div className="p-6">
       <h2 className="text-3xl font-bold mb-6 capitalize">{category}</h2>
