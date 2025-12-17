@@ -1,51 +1,50 @@
-import { createFileRoute } from '@tanstack/react-router';
+// src/routes/categories/$category.tsx
+import { createFileRoute, useRouteContext } from '@tanstack/react-router'; // Modificado
 import { useQuery } from '@tanstack/react-query';
-import { productsApi } from '../../services/api';
+import { useCartStore } from '../../store/cartStore';
+import ProductCard from '../../components/ProductCard';
+import ProductSkeleton from '../../components/ProductSkeleton';
+import ErrorMessage from '../../components/ErrorMessage';
+import { getByCategory } from '../../services/api';
 
+// @ts-ignore - Route will be generated after route tree regeneration
 export const Route = createFileRoute('/categories/$category')({
-  component: CategoryProductsComponent,
+  // No necesitamos definir un loader aquí, solo el componente
+  component: CategoryDetailPage,
 });
 
-function CategoryProductsComponent() {
-  const { category } = Route.useParams();
+function CategoryDetailPage() {
+  // 1. FORMA CORRECTA: Usar el hook de la ruta generada para obtener los params
+  // Esto asume que el árbol de rutas está generado y tipado correctamente.
+  // El tipo inferido será { category: string }
+  const { category } = Route.useParams(); 
+    
+  // const { category } = useRouteContext({ select: (ctx) => ctx.params }); // Una alternativa, pero Route.useParams() es más directo
   
-  const { data: products, isLoading } = useQuery({
+  const { addToCart } = useCartStore();
+
+  const { data: products, isLoading, error } = useQuery({
     queryKey: ['products', 'category', category],
-    queryFn: () => productsApi.getByCategory(category),
+    queryFn: () => getByCategory(category),
   });
-  
-  if (isLoading) {
-    return <div className="text-center py-8">Cargando productos...</div>;
-  }
-  
+
+  if (isLoading) return <ProductSkeleton count={4} />;
+  if (error) return <ErrorMessage message="Error al cargar los productos por categoría." />;
+
   return (
-    <div>
-      <a
-        href="/categories"
-        className="text-blue-600 hover:text-blue-700 mb-6 inline-block"
-      >
-        ← Volver a categorías
-      </a>
-      
-      <h1 className="text-3xl font-bold text-gray-900 mb-6 capitalize">
-        {category}
-      </h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="p-6">
+      <h2 className="text-3xl font-bold mb-6 capitalize">{category}</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {products?.map((product) => (
-          <div key={product.id} className="bg-white rounded-lg shadow-md p-4">
-            <img
-              src={product.image}
-              alt={product.title}
-              className="w-full h-48 object-contain mb-4"
-            />
-            <h3 className="text-lg font-semibold mb-2 line-clamp-2">
-              {product.title}
-            </h3>
-            <p className="text-2xl font-bold text-blue-600">
-              ${product.price.toFixed(2)}
-            </p>
-            {/* TODO: Los alumnos deben agregar el botón para agregar al carrito */}
+          <div key={product.id}>
+            <ProductCard product={product} />
+
+            <button
+              onClick={() => addToCart(product)}
+              className="mt-2 w-full bg-green-500 text-white py-1.5 rounded-lg text-sm hover:bg-green-600 transition-colors"
+            >
+              🛒 Agregar al Carrito
+            </button>
           </div>
         ))}
       </div>

@@ -1,47 +1,58 @@
+// src/components/ProductCard.tsx
+
 import type { Product } from '../types/product';
-import { useCartStore } from '../store/cartStore';
-import { Link } from '@tanstack/react-router';
+import { useCartStore } from '../store/cartStore'; 
+import { useFavoritesStore } from '../store/favoritesStore'; // Importar el store
+// use emoji for heart to avoid external icon dependency
 
 interface ProductCardProps {
   product: Product;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
-  const addToCart = useCartStore((state) => state.addToCart);
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const { addToCart } = useCartStore();
   
+  // Obtener funciones y estado del store de favoritos
+  const { addFavorite, removeFavorite, isFavorite } = useFavoritesStore();
+  const isProdFavorite = isFavorite(product.id);
+
+  const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Evitar que el clic active la navegación al detalle
+    if (isProdFavorite) {
+      removeFavorite(product.id);
+    } else {
+      addFavorite(product);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
-      <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
-        <img
-          src={product.image}
-          alt={product.title}
-          className="w-full h-48 object-contain p-4 bg-white transition-transform duration-300 hover:scale-110"
-        />
-      </Link>
-      <div className="p-4">
-        <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600">
-            {product.title}
-          </h3>
-        </Link>
-        <div className="flex items-center mb-2">
-          <span className="text-yellow-500">⭐</span>
-          <span className="text-sm text-gray-600 ml-1">
-            {product.rating.rate} ({product.rating.count})
-          </span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-2xl font-bold text-blue-600">
-            ${product.price.toFixed(2)}
-          </span>
-          <button
-            onClick={() => addToCart(product)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium"
-          >
-            Agregar
-          </button>
-        </div>
-      </div>
+    // ... (div principal con card-hover)
+    <div className="bg-white rounded-lg shadow-md overflow-hidden card-hover relative">
+      
+      {/* Botón de Favoritos (TAMAÑO MÁS PEQUEÑO) */}
+      <button 
+        onClick={handleToggleFavorite}
+        className="absolute top-2 right-2 p-2 rounded-full bg-white/70 backdrop-blur-sm z-10 transition-transform duration-200 hover:scale-110 active:scale-95"
+      >
+        <span
+          className={isProdFavorite ? "text-red-500 text-lg" : "text-gray-400 text-lg"}
+          aria-hidden
+        >
+          ❤️
+        </span>
+      </button>
+
+      {/* ... (Imagen y cuerpo del producto) */}
+      
+      {/* Botón de Agregar al Carrito */}
+      <button 
+        onClick={() => addToCart(product)}
+        className="mt-4 w-full bg-blue-600 text-white py-2 hover:bg-blue-700 transition-transform duration-200 hover:scale-[1.01] active:scale-[0.99]"
+      >
+        🛒 Agregar al Carrito
+      </button>
     </div>
   );
-}
+};
+
+export default ProductCard;

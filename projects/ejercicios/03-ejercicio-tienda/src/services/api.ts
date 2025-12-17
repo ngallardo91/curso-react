@@ -28,3 +28,9 @@ export const productsApi = {
     return data;
   },
 };
+
+// Named convenience exports for easier importing in route files
+export const getAll = productsApi.getAll;
+export const getById = productsApi.getById;
+export const getCategories = productsApi.getCategories;
+export const getByCategory = productsApi.getByCategory;
