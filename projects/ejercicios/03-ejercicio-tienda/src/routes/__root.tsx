@@ -49,6 +49,16 @@ function RootComponent() {
                 </Link>
               </div>
             </div>
+            
+            <Link
+              to="/register"
+              className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md transition-all duration-200 hover:bg-blue-50"
+              activeProps={{
+              className: 'text-blue-600 font-semibold bg-blue-50',
+              }}
+            >
+              Registro
+            </Link>
 
             {/* Favoritos y Carrito */}
             <div className="flex items-center space-x-4">
