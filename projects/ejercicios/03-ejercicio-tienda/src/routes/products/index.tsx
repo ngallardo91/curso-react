@@ -118,7 +118,7 @@ function ProductsComponent() {
     }
   }, [currentPage, totalPages])
 
-  // ✅ Calcular qué productos mostrar según la página
+  // Calcular qué productos mostrar según la página
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage
     const end = start + itemsPerPage
