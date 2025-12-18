@@ -1,6 +1,8 @@
-export type Task = {
+export type Priority = "baja" | "media" | "alta";
+export type Filter = "todas" | "completadas" | "pendientes";
+export interface Task {
   id: number;
   title: string;
-  priority: "baja" | "media" | "alta";
+  priority: Priority;
   completed: boolean;
 }
