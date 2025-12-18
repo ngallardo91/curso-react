@@ -18,7 +18,8 @@ function Juego({ maximo }) {
 
     // Estados
   const [numeroJugador, setNumeroJugador] = useState("");
-  const [numeroMaquina, setNumeroMaquina] = useState("");
+  //const [numeroMaquina, setNumeroMaquina] = useState("");
+  const [numeroMaquina, setNumeroMaquina] = useState(Math.floor(Math.random() * maximo) + 1);
     
   const [resultado, setResultado] = useState("");
   const [esCorrecto, setEsCorrecto] = useState(false);
@@ -42,32 +43,39 @@ function Juego({ maximo }) {
   const verificarNumero = () => 
     {
     
-      
-      const numeroAleatorio = Math.floor(Math.random() * maximo) + 1;
-    setNumeroMaquina(numeroAleatorio);
-    
+
+     //valido que el número ingresado
+     if (numeroJugador === "" || isNaN(numeroJugador)) {
+      setResultado("⚠️ Ingresa un número válido");
+      setEsCorrecto(false);
+      return;
+    }
         
-    if (numeroJugador === numeroAleatorio) 
+    if (numeroJugador === numeroMaquina) 
       {
-      setResultado("¡Correcto! Adivinaste el número.");
+      //setResultado("¡Correcto! Adivinaste el número.");
+      setResultado(`🎉  ¡Correcto! Adivinaste el número. Elegiste el número ${numeroJugador} y la máquina tenía el número ${numeroMaquina}.`
+      );   
       setEsCorrecto(true);
     } else 
       {
-      setResultado(`Fallaste. El número era ${numeroAleatorio}.`);
+      //setResultado(`Fallaste. El número era ${numeroAleatorio}.`);
+      setResultado(`❌  Fallaste. Elegiste el número ${numeroJugador} y la máquina tenía el número ${numeroMaquina}.`);
       setEsCorrecto(false);
     }
+
+     setNumeroMaquina(Math.floor(Math.random() * maximo) + 1);
   };
 
 
   return (
     <div>
-      <form>
         {/* TODO: Input controlado para ingresar el número */}
         <input
           type="number"
           min="1"
           max={maximo}
-          placeholder="Ingresa un número del 1 al ${maximo}"
+          placeholder={`Ingresa un número del 1 al ${maximo}`}
           value={numeroJugador}
           onChange={manejarCambio}
         />
@@ -75,7 +83,6 @@ function Juego({ maximo }) {
           Adivinar
         </button>
 
-      </form>
 
 
       {resultado && (
