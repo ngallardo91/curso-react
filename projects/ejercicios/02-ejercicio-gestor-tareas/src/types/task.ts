@@ -4,3 +4,4 @@ export type Task = {
   priority: "baja" | "media" | "alta";
   completed: boolean;
 }
+

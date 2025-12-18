@@ -1,88 +1,55 @@
-import { createFileRoute } from '@tanstack/react-router';
+// src/routes/products/$productId.tsx
+import { useState } from 'react';
+import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
-import { productsApi } from '../../services/api';
+import { useCartStore } from '../../store/cartStore'; 
+import { getById } from '../../services/api';
+import ProductSkeleton from '../../components/ProductSkeleton';
+import ErrorMessage from '../../components/ErrorMessage';
 
 export const Route = createFileRoute('/products/$productId')({
-  component: ProductDetailComponent,
+  component: ProductDetailPage,
 });
 
-function ProductDetailComponent() {
-  const { productId } = Route.useParams();
-  
+function ProductDetailPage() {
+  const { productId } = useParams({ from: '/products/$productId' });
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', productId],
-    queryFn: () => productsApi.getById(Number(productId)),
+    queryFn: () => getById(Number(productId)),
   });
+
+  // 1. Obtener la función addToCart del store
+  const { addToCart } = useCartStore(); 
   
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-xl text-gray-600">Cargando producto...</div>
-      </div>
-    );
-  }
-  
-  if (error || !product) {
-    return (
-      <div className="text-center text-red-600 py-8">
-        Error al cargar el producto
-      </div>
-    );
-  }
-  
-  return (
-    <div className="max-w-5xl mx-auto">
-      <a
-        href="/products"
-        className="text-blue-600 hover:text-blue-700 mb-6 inline-block transition-all duration-200 hover:-translate-x-1"
-      >
-        ← Volver a productos
-      </a>
+  // BONUS: Estado local para el feedback visual
+  const [feedback, setFeedback] = useState(''); 
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product); // Llama a la función con el producto completo
       
-      <div className="bg-white rounded-lg shadow-lg p-8 grid grid-cols-1 md:grid-cols-2 gap-8 animate-fadeIn">
-        <div className="flex items-center justify-center">
-          <img
-            src={product.image}
-            alt={product.title}
-            className="max-h-96 object-contain"
-          />
-        </div>
-        
-        <div>
-          <span className="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full mb-4 capitalize">
-            {product.category}
-          </span>
-          
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            {product.title}
-          </h1>
-          
-          <div className="flex items-center mb-4">
-            <span className="text-yellow-500 text-xl">⭐</span>
-            <span className="text-lg text-gray-700 ml-2">
-              {product.rating.rate} <span className="text-gray-500">({product.rating.count} reviews)</span>
-            </span>
-          </div>
-          
-          <p className="text-4xl font-bold text-blue-600 mb-6">
-            ${product.price.toFixed(2)}
-          </p>
-          
-          <p className="text-gray-700 mb-8 leading-relaxed">
-            {product.description}
-          </p>
-          
-          <button
-            onClick={() => {
-              // TODO: Los alumnos deben implementar esta funcionalidad
-              alert('Esta funcionalidad debe ser implementada');
-            }}
-            className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg"
-          >
-            Agregar al Carrito
-          </button>
-        </div>
-      </div>
+      // BONUS: Mostrar feedback temporal
+      setFeedback('¡Agregado al Carrito!');
+      setTimeout(() => setFeedback(''), 1500);
+    }
+  };
+
+  if (isLoading) return <ProductSkeleton count={1} />;
+  if (error) return <ErrorMessage message="Error al cargar el producto." />;
+  if (!product) return <div>Producto no encontrado.</div>;
+
+  return (
+    <div className="p-6 md:flex">
+      {/* ... (resto del markup del detalle) */}
+      <button 
+        onClick={handleAddToCart} // <--- Implementación de la función
+        className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 relative"
+      >
+        {/* Muestra el feedback o el texto del botón */}
+        {feedback || "Agregar al Carrito"}
+      </button>
     </div>
   );
 }
+
+// ... (resto de la exportación)
