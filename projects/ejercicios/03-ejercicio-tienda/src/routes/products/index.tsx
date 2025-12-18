@@ -2,15 +2,12 @@
 // src/routes/products/index.tsx
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { productsApi } from '../../services/api'
 import { ProductCard } from '../../components/ProductCard'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ErrorMessage from '../../components/ErrorMessage'
 import type { Product } from '../../types/product'
-
-
-
 
 // Criterios de orden disponibles (actualizados)
 type SortBy = 'price_asc' | 'price_desc' | 'rating_desc' | 'rating_count_desc'
@@ -20,7 +17,7 @@ export const Route = createFileRoute('/products/')({
 })
 
 function ProductsComponent() {
-  const { data: products = [], isLoading, isError, error, refetch, isFetching } = useQuery<Product[]>({
+  const { data: products = [], isLoading, error } = useQuery<Product[]>({
     queryKey: ['products'],
     queryFn: productsApi.getAll,
   })
@@ -30,8 +27,12 @@ function ProductsComponent() {
   const [minPrice, setMinPrice] = useState<string>('')
   const [maxPrice, setMaxPrice] = useState<string>('')
 
-  // 🆕 Estado de ordenamiento (Tarea 5 - Paso 1)
+  // Estado de ordenamiento (Tarea 5)
   const [sortBy, setSortBy] = useState<SortBy>('price_asc')
+
+  // 🆕 Estados de paginación (Tarea 7)
+  const [itemsPerPage, setItemsPerPage] = useState<number>(12)
+  const [currentPage, setCurrentPage] = useState<number>(1)
 
   // Preparación de filtros
   const min = minPrice.trim() === '' ? NaN : Number(minPrice)
@@ -100,6 +101,29 @@ function ProductsComponent() {
         return arr
     }
   }, [filteredProducts, sortBy])
+
+  // 🆕 Paginación (Tarea 7 - cálculo)
+  const totalItems = sortedProducts.length
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage))
+
+  // Resetear a página 1 cuando cambian filtros/orden/tamaño de página
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchTerm, minPrice, maxPrice, sortBy, itemsPerPage])
+
+  // Ajustar currentPage si queda fuera de rango (por ejemplo, al filtrar)
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages)
+    }
+  }, [currentPage, totalPages])
+
+  // ✅ Calcular qué productos mostrar según la página
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage
+    const end = start + itemsPerPage
+    return sortedProducts.slice(start, end)
+  }, [sortedProducts, currentPage, itemsPerPage])
 
   if (isLoading) {
     return (
@@ -209,7 +233,7 @@ function ProductsComponent() {
             )}
           </div>
 
-          {/* 🆕 Selector de orden (Tarea 5 - Paso 2) */}
+          {/* Selector de orden (Tarea 5 - Paso 2) */}
           <label className="flex items-center gap-2 text-sm">
             <span className="text-gray-600">Ordenar por:</span>
             <select
@@ -225,6 +249,22 @@ function ProductsComponent() {
             </select>
           </label>
         </div>
+
+        {/* Selector de tamaño de página */}
+        <div className="mt-4 flex items-center gap-2 text-sm">
+          <span className="text-gray-600">Mostrar por página:</span>
+          <select
+            value={itemsPerPage}
+            onChange={(e) => setItemsPerPage(Number(e.target.value))}
+            className="rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Cantidad de productos por página"
+          >
+            <option value={6}>6</option>
+            <option value={12}>12</option>
+            <option value={24}>24</option>
+            <option value={48}>48</option>
+          </select>
+        </div>
       </div>
 
       {/* Grid de productos */}
@@ -233,12 +273,141 @@ function ProductsComponent() {
           No se encontraron productos con los filtros seleccionados.
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {sortedProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {paginatedProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+
+          {/* Controles de paginación */}
+          <nav
+            className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3"
+            aria-label="Navegación de páginas"
+          >
+            {/* Info de página */}
+            <div className="text-sm text-gray-600">
+              Página <strong>{currentPage}</strong> de <strong>{totalPages}</strong> •{' '}
+              Mostrando {paginatedProducts.length} de {totalItems}
+            </div>
+
+            {/* Botones y números */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className={`rounded-md border px-3 py-2 text-sm ${
+                  currentPage === 1
+                    ? 'border-gray-200 text-gray-300 cursor-not-allowed'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                ← Anterior
+              </button>
+
+              {/* Números de página (compacto, con elipsis) */}
+              <PageNumbers
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onSelect={(n) => setCurrentPage(n)}
+              />
+
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className={`rounded-md border px-3 py-2 text-sm ${
+                  currentPage === totalPages
+                    ? 'border-gray-200 text-gray-300 cursor-not-allowed'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                Siguiente →
+              </button>
+            </div>
+          </nav>
+        </>
       )}
     </div>
   )
 }
+
+/**
+ * Componente auxiliar para números de página con elipsis.
+ * Muestra: 1 … prev current next … last
+ */
+function PageNumbers({
+  currentPage,
+  totalPages,
+  onSelect,
+}: {
+  currentPage: number
+  totalPages: number
+  onSelect: (page: number) => void
+}) {
+  if (totalPages <= 1) return null
+
+  // Construimos una lista compacta de páginas a mostrar
+  const pages: (number | 'ellipsis')[] = []
+
+  const add = (p: number) => {
+    if (p >= 1 && p <= totalPages && !pages.includes(p)) pages.push(p)
+  }
+
+  add(1)
+
+  // Páginas alrededor de la actual
+  add(currentPage - 1)
+  add(currentPage)
+  add(currentPage + 1)
+
+  add(totalPages)
+
+  // Ordenamos y metemos elipsis
+  const sorted = [...pages].sort((a, b) => {
+    const na = typeof a === 'number' ? a : 0
+    const nb = typeof b === 'number' ? b : 0
+    return na - nb
+  })
+
+  const display: (number | 'ellipsis')[] = []
+  for (let i = 0; i < sorted.length; i++) {
+    const curr = sorted[i]
+    const prev = sorted[i - 1]
+    if (i > 0 && typeof curr === 'number' && typeof prev === 'number') {
+      if (curr - prev > 1) {
+        display.push('ellipsis')
+      }
+    }
+    display.push(curr)
+  }
+
+  return (
+    <ul className="flex items-center gap-1" role="list">
+      {display.map((item, idx) =>
+        item === 'ellipsis' ? (
+          <li key={`el-${idx}`} className="px-2 text-gray-400 select-none">
+            …
+          </li>
+        ) : (
+          <li key={`pg-${item}`}>
+            <button
+              type="button"
+              onClick={() => onSelect(item)}
+              aria-current={item === currentPage ? 'page' : undefined}
+              className={`min-w-[2.25rem] rounded-md border px-3 py-2 text-sm ${
+                item === currentPage
+                  ? 'border-blue-600 text-blue-700 font-semibold bg-blue-50'
+                  : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              {item}
+            </button>
+          </li>
+        )
+      )}
+    </ul>
+  )
+}
+``
