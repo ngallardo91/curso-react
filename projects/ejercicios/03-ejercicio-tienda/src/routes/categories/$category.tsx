@@ -1,6 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+import { useCartStore } from '../../store/cartStore';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { ErrorMessage } from '../../components/ErrorMessage';
 
 export const Route = createFileRoute('/categories/$category')({
   component: CategoryProductsComponent,
@@ -8,6 +11,7 @@ export const Route = createFileRoute('/categories/$category')({
 
 function CategoryProductsComponent() {
   const { category } = Route.useParams();
+  const addToCart = useCartStore((state) => state.addToCart);
   
   const { data: products, isLoading } = useQuery({
     queryKey: ['products', 'category', category],
@@ -15,7 +19,11 @@ function CategoryProductsComponent() {
   });
   
   if (isLoading) {
-    return <div className="text-center py-8">Cargando productos...</div>;
+    return <LoadingSpinner />;
+  }
+  
+  if (!products) {
+    return <ErrorMessage message="Error al cargar los productos" />;
   }
   
   return (
@@ -42,10 +50,15 @@ function CategoryProductsComponent() {
             <h3 className="text-lg font-semibold mb-2 line-clamp-2">
               {product.title}
             </h3>
-            <p className="text-2xl font-bold text-blue-600">
+            <p className="text-2xl font-bold text-blue-600 mb-2">
               ${product.price.toFixed(2)}
             </p>
-            {/* TODO: Los alumnos deben agregar el botón para agregar al carrito */}
+            <button
+              onClick={() => addToCart(product)}
+              className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200"
+            >
+              Agregar al Carrito
+            </button>
           </div>
         ))}
       </div>

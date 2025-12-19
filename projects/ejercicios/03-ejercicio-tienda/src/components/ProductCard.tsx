@@ -1,5 +1,6 @@
 import type { Product } from '../types/product';
 import { useCartStore } from '../store/cartStore';
+import { useFavoritesStore } from '../store/favoritesStore';
 import { Link } from '@tanstack/react-router';
 
 interface ProductCardProps {
@@ -8,16 +9,35 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart);
+  const addFavorite = useFavoritesStore((state) => state.addFavorite);
+  const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
+  const isFavorite = useFavoritesStore((state) => state.isFavorite(product.id));
+  
+  const handleFavoriteClick = () => {
+    if (isFavorite) {
+      removeFavorite(product.id);
+    } else {
+      addFavorite(product);
+    }
+  };
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
-      <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
-        <img
-          src={product.image}
-          alt={product.title}
-          className="w-full h-48 object-contain p-4 bg-white transition-transform duration-300 hover:scale-110"
-        />
-      </Link>
+      <div className="relative">
+        <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
+          <img
+            src={product.image}
+            alt={product.title}
+            className="w-full h-48 object-contain p-4 bg-white transition-transform duration-300 hover:scale-110"
+          />
+        </Link>
+        <button
+          onClick={handleFavoriteClick}
+          className="absolute top-2 right-2 text-2xl"
+        >
+          {isFavorite ? '❤️' : '🤍'}
+        </button>
+      </div>
       <div className="p-4">
         <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
           <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600">

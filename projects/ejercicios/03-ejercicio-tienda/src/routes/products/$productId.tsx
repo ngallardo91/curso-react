@@ -1,6 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+import { useCartStore } from '../../store/cartStore';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { ErrorMessage } from '../../components/ErrorMessage';
+import { useState } from 'react';
 
 export const Route = createFileRoute('/products/$productId')({
   component: ProductDetailComponent,
@@ -8,6 +12,8 @@ export const Route = createFileRoute('/products/$productId')({
 
 function ProductDetailComponent() {
   const { productId } = Route.useParams();
+  const addToCart = useCartStore((state) => state.addToCart);
+  const [added, setAdded] = useState(false);
   
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', productId],
@@ -15,19 +21,11 @@ function ProductDetailComponent() {
   });
   
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-xl text-gray-600">Cargando producto...</div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
   
   if (error || !product) {
-    return (
-      <div className="text-center text-red-600 py-8">
-        Error al cargar el producto
-      </div>
-    );
+    return <ErrorMessage message="Error al cargar el producto" />;
   }
   
   return (
@@ -74,12 +72,15 @@ function ProductDetailComponent() {
           
           <button
             onClick={() => {
-              // TODO: Los alumnos deben implementar esta funcionalidad
-              alert('Esta funcionalidad debe ser implementada');
+              if (product) {
+                addToCart(product);
+                setAdded(true);
+                setTimeout(() => setAdded(false), 2000);
+              }
             }}
             className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg"
           >
-            Agregar al Carrito
+            {added ? '¡Agregado!' : 'Agregar al Carrito'}
           </button>
         </div>
       </div>
