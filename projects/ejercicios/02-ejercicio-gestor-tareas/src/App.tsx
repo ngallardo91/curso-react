@@ -19,12 +19,37 @@ function App() {
     setTasks(tasks.filter((t) => t.id !== id));
   };
 
-  const toggleTask = (id: number) => {
-    // TODO: cambiar el valor de completed de la tarea con ese id
+  const toggleTask = (id: number) => 
+  {
+  // TODO: cambiar el valor de completed de la tarea con ese id
+ 
+  const updatedTasks = tasks.filter((task) => 
+  {
+    if (task.id === id) 
+    {
+      // Si la tarea coincide, la modificamos
+      task.completed = !task.completed;
+    }
+    return true; // Devolvemos siempre true, ya que no estamos eliminando nada
+  });
+  
+  setTasks(updatedTasks);
+    
+
   };
 
-  const addTask = (title: string, priority: "baja" | "media" | "alta") => {
+  const addTask = (title: string, priority: "baja" | "media" | "alta") => 
+    {
     // TODO: agregar una nueva tarea con un id incremental
+ const newTask: Task = {
+      id: tasks.length > 0 ? Math.max(...tasks.map((task) => task.id)) + 1 : 1,
+      title,
+      priority,
+      completed: false,
+    };
+    setTasks([...tasks, newTask]);
+
+
   };
 
   const filteredTasks = tasks.filter((task) => {
