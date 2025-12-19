@@ -1,5 +1,6 @@
 import type { Product } from '../types/product';
 import { useCartStore } from '../store/cartStore';
+import { useFavoritesStore } from '../store/favoritesStore';
 import { Link } from '@tanstack/react-router';
 
 interface ProductCardProps {
@@ -8,9 +9,22 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart);
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+  const isFavorite = useFavoritesStore((state) => state.isFavorite(product.id));
   
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn relative">
+      <button
+        onClick={() => toggleFavorite(product)}
+        className={`absolute top-2 right-2 z-10 p-2 rounded-full transition-all duration-200 ${
+          isFavorite
+            ? 'bg-red-100 text-red-500'
+            : 'bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-400'
+        }`}
+        title={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+      >
+        {isFavorite ? '❤️' : '🤍'}
+      </button>
       <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
         <img
           src={product.image}
