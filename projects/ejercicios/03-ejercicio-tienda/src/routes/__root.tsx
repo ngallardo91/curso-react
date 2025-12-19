@@ -1,6 +1,7 @@
 import { createRootRoute, Outlet, Link } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { useCartStore } from '../store/cartStore';
+import { useFavoritesStore } from '../store/favoritesStore';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -8,6 +9,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const totalItems = useCartStore((state) => state.getTotalItems());
+  const totalFavorites = useFavoritesStore((state) => state.getTotalFavorites());
   
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
@@ -40,19 +42,41 @@ function RootComponent() {
                 >
                   Categorías
                 </Link>
+                <Link
+                  to="/register"
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md transition-all duration-200 hover:bg-blue-50"
+                  activeProps={{
+                    className: 'text-blue-600 font-semibold bg-blue-50',
+                  }}
+                >
+                  Registrarse
+                </Link>
               </div>
             </div>
-            <Link
-              to="/cart"
-              className="relative text-gray-700 hover:text-blue-600 transition-all duration-200 hover:scale-110"
-            >
-              <span className="text-2xl">🛒</span>
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
-                  {totalItems}
-                </span>
-              )}
-            </Link>
+            <div className="flex items-center space-x-4">
+              <Link
+                to="/favorites"
+                className="relative text-gray-700 hover:text-red-500 transition-all duration-200 hover:scale-110"
+              >
+                <span className="text-2xl">❤️</span>
+                {totalFavorites > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {totalFavorites}
+                  </span>
+                )}
+              </Link>
+              <Link
+                to="/cart"
+                className="relative text-gray-700 hover:text-blue-600 transition-all duration-200 hover:scale-110"
+              >
+                <span className="text-2xl">🛒</span>
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
