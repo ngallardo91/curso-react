@@ -1,6 +1,9 @@
+
 import { createRootRoute, Outlet, Link } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { useCartStore } from '../store/cartStore';
+
+import { useFavoritesStore } from '../store/favoritesStore';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -9,6 +12,8 @@ export const Route = createRootRoute({
 function RootComponent() {
   const totalItems = useCartStore((state) => state.getTotalItems());
   
+  const favoritesCount = useFavoritesStore((s) => s.favorites.length);
+
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       <nav className="bg-white/95 backdrop-blur-sm shadow-md sticky top-0 z-50">
@@ -21,6 +26,7 @@ function RootComponent() {
               >
                 Mi Tienda
               </Link>
+
               <div className="flex space-x-4">
                 <Link
                   to="/products"
@@ -31,6 +37,7 @@ function RootComponent() {
                 >
                   Productos
                 </Link>
+
                 <Link
                   to="/categories"
                   className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md transition-all duration-200 hover:bg-blue-50"
@@ -40,8 +47,30 @@ function RootComponent() {
                 >
                   Categorías
                 </Link>
+
+                
+                <Link
+                  to="/favorites"
+                  className="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md transition-all duration-200 hover:bg-pink-50 flex items-center gap-2"
+                  activeProps={{
+                    className: 'text-pink-600 font-semibold bg-pink-50',
+                  }}
+                  title="Ver favoritos"
+                >
+                  <span className="text-lg" role="img" aria-hidden="true">❤️</span>
+                  <span>Favoritos</span>
+                  {favoritesCount > 0 && (
+                    <span
+                      aria-label="Cantidad de favoritos"
+                      className="ml-1 bg-pink-100 text-pink-600 rounded-full px-2 py-0.5 text-xs font-bold"
+                    >
+                      {favoritesCount}
+                    </span>
+                  )}
+                </Link>
               </div>
             </div>
+
             <Link
               to="/cart"
               className="relative text-gray-700 hover:text-blue-600 transition-all duration-200 hover:scale-110"
@@ -56,11 +85,11 @@ function RootComponent() {
           </div>
         </div>
       </nav>
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Outlet />
       </main>
-      
+
       <TanStackRouterDevtools position="bottom-right" />
     </div>
   );
