@@ -5,6 +5,19 @@
   text-align: center;
 }
 
+.resultado {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.correcto {
+  color: green;
+}
+
+.incorrecto {
+  color: orange;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
