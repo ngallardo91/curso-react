@@ -16,16 +16,15 @@ function Juego({ maximo }) {
   // - resultado (el mensaje de resultado)
   // - esCorrecto (booleano para indicar si adivinó o no)
 
-    // Estados
+  // Estados
   const [numeroJugador, setNumeroJugador] = useState("");
-  //const [numeroMaquina, setNumeroMaquina] = useState("");
   const [numeroMaquina, setNumeroMaquina] = useState(Math.floor(Math.random() * maximo) + 1);
     
   const [resultado, setResultado] = useState("");
   const [esCorrecto, setEsCorrecto] = useState(false);
 
-  // TODO: Crear una función para manejar el cambio del input (actualizar numeroJugador)
-  // Pista: usa e.target.value y recuerda convertirlo a número.
+// TODO: Crear una función para manejar el cambio del input (actualizar numeroJugador)
+// Pista: usa e.target.value y recuerda convertirlo a número.
 
 // Manejar cambio del input
   const manejarCambio = (e) => 
@@ -38,32 +37,29 @@ function Juego({ maximo }) {
   // - Si no => mostrar mensaje de error
   // - Siempre generar un nuevo número aleatorio con Math.floor(Math.random() * maximo) + 1
 
- // Verificar número
 
   const verificarNumero = () => 
     {
     
-
-     //valido que el número ingresado
+     // Validar que el número ingresado sea correcto. Si no es correcto, mostrar mensaje de error.
      if (numeroJugador === "" || isNaN(numeroJugador)) {
-      setResultado("⚠️ Ingresa un número válido");
+      setResultado("⚠️ Ingresá un número válido");
       setEsCorrecto(false);
       return;
     }
         
     if (numeroJugador === numeroMaquina) 
       {
-      //setResultado("¡Correcto! Adivinaste el número.");
-      setResultado(`🎉  ¡Correcto! Adivinaste el número. Elegiste el número ${numeroJugador} y la máquina tenía el número ${numeroMaquina}.`
+      setResultado(`🎉  Adivinaste el número. Elegiste el número ${numeroJugador} y la máquina tenía el número ${numeroMaquina}.`
       );   
       setEsCorrecto(true);
     } else 
       {
-      //setResultado(`Fallaste. El número era ${numeroAleatorio}.`);
-      setResultado(`❌  Fallaste. Elegiste el número ${numeroJugador} y la máquina tenía el número ${numeroMaquina}.`);
+      setResultado(`❌  No adivinaste. Elegiste el número ${numeroJugador} y la máquina tenía el número ${numeroMaquina}.`);
       setEsCorrecto(false);
     }
 
+     // Generar un nuevo número aleatorio con Math.floor(Math.random() * maximo) + 1
      setNumeroMaquina(Math.floor(Math.random() * maximo) + 1);
   };
 
@@ -100,7 +96,7 @@ function App() {
     <div className="App">
       <Header />
       <Juego maximo={10} />
-      <footer>¡Intenta adivinar el número entre 1 y 10!</footer>
+      <footer>¡Intentá adivinar el número entre 1 y 10!</footer>
     </div>
   );
 }
