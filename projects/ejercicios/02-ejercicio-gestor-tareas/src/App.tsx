@@ -19,10 +19,19 @@ function App() {
     setTasks(tasks.filter((t) => t.id !== id));
   };
 
+
+  /*
+  const toggleTask = (id: number) => {
+    setTasks(tasks.map((task) => 
+      task.id === id 
+        ? { ...task, completed: !task.completed }
+        : task
+    ));
+  };
+  */
   const toggleTask = (id: number) => 
   {
   // TODO: cambiar el valor de completed de la tarea con ese id
- 
   const updatedTasks = tasks.filter((task) => 
   {
     if (task.id === id) 
@@ -32,10 +41,10 @@ function App() {
     }
     return true; // Devolvemos siempre true, ya que no estamos eliminando nada
   });
-  
-  setTasks(updatedTasks);
-    
 
+
+
+  setTasks(updatedTasks);
   };
 
   const addTask = (title: string, priority: "baja" | "media" | "alta") => 
