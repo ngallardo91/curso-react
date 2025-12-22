@@ -15,6 +15,9 @@ function App() {
 
   const [filter, setFilter] = useState<"todas" | "completadas" | "pendientes">("todas");
 
+
+
+  /////
   const deleteTask = (id: number) => {
     setTasks(tasks.filter((t) => t.id !== id));
   };
