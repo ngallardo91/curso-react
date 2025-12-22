@@ -8,10 +8,10 @@ import type { Task } from './types/task'
 
 function App() {
 
-  const [tasks, setTasks] = useState<Task[]>([
+  const [tasks, setTasks] = useState<Task[]>([] /*[
     { id: 1, title: "Preparar presentación", priority: "alta", completed: false },
     { id: 2, title: "Revisar mails", priority: "media", completed: true },
-  ]);
+  ]*/);
 
   const [filter, setFilter] = useState<"todas" | "completadas" | "pendientes">("todas");
 
@@ -20,11 +20,16 @@ function App() {
   };
 
   const toggleTask = (id: number) => {
-    // TODO: cambiar el valor de completed de la tarea con ese id
+    // TODO: cambiar el valor de completed de la tarea con ese id.
+    setTasks(tasks.map(m =>m.id === id ? { ...m, completed: !m.completed } : m));
   };
 
   const addTask = (title: string, priority: "baja" | "media" | "alta") => {
     // TODO: agregar una nueva tarea con un id incremental
+    const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+    console.log(newId);
+    const newTask: Task = { id: newId, title, priority, completed: false };
+    setTasks([...tasks, newTask]);
   };
 
   const filteredTasks = tasks.filter((task) => {

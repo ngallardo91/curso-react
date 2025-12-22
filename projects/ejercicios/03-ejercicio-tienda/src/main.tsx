@@ -3,6 +3,7 @@ import './index.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,5 +31,8 @@ declare module '@tanstack/react-router' {
 createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>
     <RouterProvider router={router} />
+
+    {/* 🔥 DevTools siempre deben ir dentro del QueryClientProvider */}
+    <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>
 )
