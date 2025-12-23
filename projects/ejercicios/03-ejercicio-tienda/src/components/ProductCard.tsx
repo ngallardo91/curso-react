@@ -1,6 +1,7 @@
-import type { Product } from '../types/product';
-import { useCartStore } from '../store/cartStore';
-import { Link } from '@tanstack/react-router';
+import type { Product } from "../types/product";
+import { useCartStore } from "../store/cartStore";
+import { Link } from "@tanstack/react-router";
+import { useFavoritesStore } from "../store/favoritesStore";
 
 interface ProductCardProps {
   product: Product;
@@ -8,10 +9,18 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart);
-  
+  const addToFavorites = useFavoritesStore((state) => state.addToFavorites);
+  const removeFromFavorites = useFavoritesStore(
+    (state) => state.removeFromFavorites
+  );
+  const isFavorite = useFavoritesStore((state) => state.isFavorite(product.id));
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
-      <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
+      <Link
+        to="/products/$productId"
+        params={{ productId: product.id.toString() }}
+      >
         <img
           src={product.image}
           alt={product.title}
@@ -19,7 +28,10 @@ export function ProductCard({ product }: ProductCardProps) {
         />
       </Link>
       <div className="p-4">
-        <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
+        <Link
+          to="/products/$productId"
+          params={{ productId: product.id.toString() }}
+        >
           <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600">
             {product.title}
           </h3>
@@ -39,6 +51,16 @@ export function ProductCard({ product }: ProductCardProps) {
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium"
           >
             Agregar
+          </button>
+          <button
+            onClick={() =>
+              isFavorite
+                ? removeFromFavorites(product.id)
+                : addToFavorites(product)
+            }
+            className="bg-yellow-300 text-white px-4 py-2 rounded-lg hover:bg-yellow-500 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium"
+          >
+            {isFavorite ? "💔" : "❤️"}
           </button>
         </div>
       </div>
