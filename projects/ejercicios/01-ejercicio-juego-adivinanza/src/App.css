@@ -40,3 +40,16 @@
 .read-the-docs {
   color: #888;
 }
+
+.resultado {
+  font-size: 1.2rem;
+}
+
+.acierto {
+  color: green;
+}
+
+.error {
+  color: red;
+}
+

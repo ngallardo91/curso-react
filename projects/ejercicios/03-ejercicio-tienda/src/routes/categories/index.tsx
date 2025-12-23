@@ -1,8 +1,17 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { useAuthStore } from '../../store/authStore';
 
 export const Route = createFileRoute('/categories/')({
+  beforeLoad: async () => {
+    const { isAuthenticated } = useAuthStore.getState()
+
+    if (!isAuthenticated) {
+      throw redirect({ to: "/login" })
+    }
+  },
   component: CategoriesComponent,
 });
 
@@ -13,7 +22,7 @@ function CategoriesComponent() {
   });
   
   if (isLoading) {
-    return <div className="text-center py-8">Cargando categorías...</div>;
+    return <LoadingSpinner />
   }
   
   return (
