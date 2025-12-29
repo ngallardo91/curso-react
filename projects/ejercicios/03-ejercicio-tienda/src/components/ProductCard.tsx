@@ -1,6 +1,7 @@
 import type { Product } from '../types/product';
 import { useCartStore } from '../store/cartStore';
 import { Link } from '@tanstack/react-router';
+import { useFavoriteStore } from '../store/favoritesStore';
 
 interface ProductCardProps {
   product: Product;
@@ -8,9 +9,39 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart);
+
+  const addToFavorites = useFavoriteStore((state) => state.addToFavorites);
+  const removeFromFavorites = useFavoriteStore((state) => state.removeFromFavorites);
+  const isFavorite = useFavoriteStore((state) =>
+    state.isFavorite(product.id)
+  );
+
+  const toggleFavorite = () => {
+    if (isFavorite) removeFromFavorites(product.id);
+    else addToFavorites(product);
+  };
+
+
+
   
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
+    <div className="relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
+     
+      {/* favorito */}
+      <button
+        type="button"
+        aria-label={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
+        onClick={(e) => {
+          e.preventDefault();    // evita la navegación
+          e.stopPropagation();   // evita que el click burbujee al link
+          toggleFavorite();
+        }}
+        onMouseDown={(e) => e.stopPropagation()} // ayuda con algunos navegadores
+        className="absolute top-3 right-3 text-2xl transition-transform hover:scale-110 z-10"
+      >
+        {isFavorite ? "❤️" : "🤍"}
+      </button>
+     
       <Link to="/products/$productId" params={{ productId: product.id.toString() }}>
         <img
           src={product.image}

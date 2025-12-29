@@ -15,7 +15,7 @@ export function TaskItem({ task, onDelete, onToggle }: Props) {
           marginRight: 8,
         }}
       >
-        {task.title} ({task.priority})
+        Id: {task.id} Tarea: {task.title} ({task.priority})
       </span>
       <button onClick={() => onToggle(task.id)}>
         {task.completed ? "Desmarcar" : "Completar"}

@@ -1,6 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+import type { Product } from '../../types/product';
+import { useCartStore } from '../../store/cartStore';
+import { useState } from 'react';
+import LoadSpinner from '../../components/LoadingSpinner';
+import ErrorMessage from '../../components/ErrorMessage';
 
 export const Route = createFileRoute('/products/$productId')({
   component: ProductDetailComponent,
@@ -8,6 +13,9 @@ export const Route = createFileRoute('/products/$productId')({
 
 function ProductDetailComponent() {
   const { productId } = Route.useParams();
+
+  const { addToCart } = useCartStore();
+  const [added, setAdded] = useState(false);
   
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', productId],
@@ -17,18 +25,29 @@ function ProductDetailComponent() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-xl text-gray-600">Cargando producto...</div>
+      
+       <LoadSpinner/>
       </div>
     );
   }
   
   if (error || !product) {
     return (
-      <div className="text-center text-red-600 py-8">
-        Error al cargar el producto
-      </div>
+       <div className="text-center text-red-600 py-8">
+      {/* //   Error al cargar el producto */}
+      <ErrorMessage message="Error al cargar los productos." />
+       </div>
     );
   }
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    setAdded(true);
+
+    setTimeout(() => {
+      setAdded(false);
+    }, 1500);
+  };
   
   return (
     <div className="max-w-5xl mx-auto">
@@ -72,7 +91,7 @@ function ProductDetailComponent() {
             {product.description}
           </p>
           
-          <button
+          {/* <button
             onClick={() => {
               // TODO: Los alumnos deben implementar esta funcionalidad
               alert('Esta funcionalidad debe ser implementada');
@@ -80,9 +99,30 @@ function ProductDetailComponent() {
             className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg"
           >
             Agregar al Carrito
+          </button> */}
+          <button
+            onClick={handleAddToCart}
+            disabled={added}
+            className={`w-full py-4 rounded-lg font-semibold transition-all duration-200 transform shadow-lg text-lg
+              ${
+                added
+                  ? 'bg-green-600 cursor-default'
+                  : 'bg-blue-600 hover:bg-blue-700 hover:scale-105 active:scale-95'
+              }
+              text-white`}
+          >
+            {added ? '¡Agregado!' : 'Agregar al Carrito'}
           </button>
         </div>
       </div>
     </div>
   );
 }
+/* function addToCart(product: Product) {
+  throw new Error('Function not implemented.');
+}
+
+function setAdded(arg0: boolean) {
+  throw new Error('Function not implemented.');
+} */
+
