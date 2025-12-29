@@ -1,42 +1,86 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
+.App {
+  max-width: 400px;
+  margin: 2rem auto;
   padding: 2rem;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.juego {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+input[type="number"] {
+  padding: 0.75rem;
+  font-size: 1.2rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
 }
 
-.card {
-  padding: 2em;
+input[type="number"]:focus {
+  outline: none;
+  border-color: #646cff;
 }
 
-.read-the-docs {
+button {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:not(.btn-reiniciar) {
+  background: #646cff;
+  color: white;
+}
+
+.btn-reiniciar {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.intentos {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.resultado {
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.resultado.correcto {
+  background: #d4edda;
+  color: #155724;
+}
+
+.resultado.incorrecto {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+footer {
+  margin-top: 1.5rem;
   color: #888;
+  font-size: 0.85rem;
 }
