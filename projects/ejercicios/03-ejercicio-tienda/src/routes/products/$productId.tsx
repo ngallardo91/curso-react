@@ -1,6 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
+import { useCartStore } from '../../store/cartStore';
+import { useFavoritesStore } from '../../store/favoritesStore';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { ErrorMessage } from '../../components/ErrorMessage';
 
 export const Route = createFileRoute('/products/$productId')({
   component: ProductDetailComponent,
@@ -8,25 +12,26 @@ export const Route = createFileRoute('/products/$productId')({
 
 function ProductDetailComponent() {
   const { productId } = Route.useParams();
+  const addToCart = useCartStore((state) => state.addToCart);
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+  const isFavorite = useFavoritesStore((state) => state.isFavorite(Number(productId)));
   
-  const { data: product, isLoading, error } = useQuery({
+  const { data: product, isLoading, error, refetch } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => productsApi.getById(Number(productId)),
   });
   
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-xl text-gray-600">Cargando producto...</div>
-      </div>
-    );
+    return <LoadingSpinner message="Cargando producto..." size="lg" />;
   }
   
   if (error || !product) {
     return (
-      <div className="text-center text-red-600 py-8">
-        Error al cargar el producto
-      </div>
+      <ErrorMessage
+        title="Producto no encontrado"
+        message="No pudimos cargar este producto. Puede que no exista o haya un problema de conexión."
+        onRetry={() => refetch()}
+      />
     );
   }
   
@@ -39,7 +44,18 @@ function ProductDetailComponent() {
         ← Volver a productos
       </a>
       
-      <div className="bg-white rounded-lg shadow-lg p-8 grid grid-cols-1 md:grid-cols-2 gap-8 animate-fadeIn">
+      <div className="bg-white rounded-lg shadow-lg p-8 grid grid-cols-1 md:grid-cols-2 gap-8 animate-fadeIn relative">
+        {/* Botón de favoritos */}
+        <button
+          onClick={() => toggleFavorite(product)}
+          className="absolute top-4 right-4 p-3 rounded-full bg-gray-100 hover:bg-gray-200 shadow-md transition-all duration-200 hover:scale-110 z-10"
+          title={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+        >
+          <span className={`text-2xl ${isFavorite ? 'text-red-500' : 'text-gray-400'}`}>
+            {isFavorite ? '❤️' : '🤍'}
+          </span>
+        </button>
+
         <div className="flex items-center justify-center">
           <img
             src={product.image}
@@ -73,11 +89,8 @@ function ProductDetailComponent() {
           </p>
           
           <button
-            onClick={() => {
-              // TODO: Los alumnos deben implementar esta funcionalidad
-              alert('Esta funcionalidad debe ser implementada');
-            }}
-            className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg"
+            onClick={() => addToCart(product)}
+            className="w-full py-4 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg bg-blue-600 text-white hover:bg-blue-700"
           >
             Agregar al Carrito
           </button>
