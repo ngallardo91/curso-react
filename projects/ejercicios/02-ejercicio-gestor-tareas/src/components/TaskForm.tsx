@@ -1,12 +1,13 @@
 import { useState } from "react";
+import type { Priority } from "../types/task";
 
 interface Props {
-  onAddTask: (title: string, priority: "baja" | "media" | "alta") => void;
+  onAddTask: (title: string, priority: Priority) => void;
 }
 
 export function TaskForm({ onAddTask }: Props) {
   const [title, setTitle] = useState("");
-  const [priority, setPriority] = useState<"baja" | "media" | "alta">("media");
+  const [priority, setPriority] = useState<Priority>("media");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +25,7 @@ export function TaskForm({ onAddTask }: Props) {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <select value={priority} onChange={(e) => setPriority(e.target.value as "baja" | "media" | "alta")}>
+      <select value={priority} onChange={(e) => setPriority(e.target.value as Priority)}>
         <option value="baja">Baja</option>
         <option value="media">Media</option>
         <option value="alta">Alta</option>

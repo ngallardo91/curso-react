@@ -1,6 +1,10 @@
+import type { Filter } from "../types/task";
+
 interface Props {
-  filter: "todas" | "completadas" | "pendientes";
-  setFilter: (filtro: "todas" | "completadas" | "pendientes") => void;
+  //filter: "todas" | "completadas" | "pendientes";
+  filter: Filter;
+  //setFilter: (filtro: "todas" | "completadas" | "pendientes") => void;
+  setFilter: (filtro: Filter) => void;
 }
 
 export function TaskFilter({ filter, setFilter }: Props) {

@@ -9,6 +9,8 @@ export const api = axios.create({
 
 export const productsApi = {
   getAll: async (): Promise<Product[]> => {
+    /* Simular retraso para poder ver el gif */
+    await new Promise(resolve => setTimeout(resolve, 5000)) 
     const { data } = await api.get<Product[]>('/products');
     return data;
   },
