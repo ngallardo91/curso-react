@@ -1,5 +1,6 @@
 import type { Product } from '../types/product';
 import { useCartStore } from '../store/cartStore';
+import { useFavoritesStore } from '../store/favoritesStore';
 import { Link } from '@tanstack/react-router';
 import toast from 'react-hot-toast';
 
@@ -9,6 +10,9 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart);
+  const addFavorite = useFavoritesStore((s) => s.addFavorite);
+  const removeFavorite = useFavoritesStore((s) => s.removeFavorite);
+  const isFav = useFavoritesStore((s) => s.favorites.some((p) => p.id === product.id));
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-hover animate-fadeIn">
@@ -43,6 +47,21 @@ export function ProductCard({ product }: ProductCardProps) {
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium"
           >
             Agregar
+          </button>
+          <button
+            onClick={() => {
+              if (isFav) {
+                removeFavorite(product.id);
+                toast(`${product.title} removido de favoritos`);
+              } else {
+                addFavorite(product);
+                toast.success(`${product.title} agregado a favoritos`);
+              }
+            }}
+            aria-label="Favorito"
+            className={`ml-2 px-3 py-2 rounded-md transition-colors ${isFav ? 'text-red-500' : 'text-gray-400'}`}
+          >
+            ❤️
           </button>
         </div>
       </div>
