@@ -1,5 +1,6 @@
 import { createRootRoute, Outlet, Link } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import { Toaster } from 'react-hot-toast';
 import { useCartStore } from '../store/cartStore';
 
 export const Route = createRootRoute({
@@ -62,6 +63,7 @@ function RootComponent() {
       </main>
       
       <TanStackRouterDevtools position="bottom-right" />
+      <Toaster position="top-center" />
     </div>
   );
 }

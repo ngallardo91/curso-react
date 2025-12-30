@@ -1,6 +1,7 @@
 import type { Product } from '../types/product';
 import { useCartStore } from '../store/cartStore';
 import { Link } from '@tanstack/react-router';
+import toast from 'react-hot-toast';
 
 interface ProductCardProps {
   product: Product;
@@ -35,7 +36,10 @@ export function ProductCard({ product }: ProductCardProps) {
             ${product.price.toFixed(2)}
           </span>
           <button
-            onClick={() => addToCart(product)}
+            onClick={() => {
+              addToCart(product);
+              toast.success(`${product.title} agregado al carrito`);
+            }}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium"
           >
             Agregar
