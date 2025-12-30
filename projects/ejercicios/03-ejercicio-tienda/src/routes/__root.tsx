@@ -1,6 +1,8 @@
 import { createRootRoute, Outlet, Link } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import { Toaster } from 'react-hot-toast';
 import { useCartStore } from '../store/cartStore';
+import { useFavoritesStore } from '../store/favoritesStore';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -8,6 +10,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const totalItems = useCartStore((state) => state.getTotalItems());
+  const totalFavorites = useFavoritesStore((s) => s.favorites.length);
   
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
@@ -40,6 +43,20 @@ function RootComponent() {
                 >
                   Categorías
                 </Link>
+                <Link
+                  to="/favorites"
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md transition-all duration-200 hover:bg-blue-50 relative"
+                  activeProps={{
+                    className: 'text-blue-600 font-semibold bg-blue-50',
+                  }}
+                >
+                  Favoritos
+                  {totalFavorites > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                      {totalFavorites}
+                    </span>
+                  )}
+                </Link>
               </div>
             </div>
             <Link
@@ -62,6 +79,7 @@ function RootComponent() {
       </main>
       
       <TanStackRouterDevtools position="bottom-right" />
+      <Toaster position="top-center" />
     </div>
   );
 }

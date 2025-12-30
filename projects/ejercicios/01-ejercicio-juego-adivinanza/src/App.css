@@ -40,3 +40,21 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Resultado: verde si correcto, rojo si incorrecto */
+.resultado {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+}
+.resultado.correcto {
+  background-color: #e6ffed;
+  color: #046d24;
+  border: 1px solid #7ee08a33;
+}
+.resultado.incorrecto {
+  background-color: #ffecec;
+  color: #8b0000;
+  border: 1px solid #ff7b7b33;
+}
