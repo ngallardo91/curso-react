@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { productsApi } from '../../services/api';
+import { useCartStore } from '../../store/cartStore';
 
 export const Route = createFileRoute('/products/$productId')({
   component: ProductDetailComponent,
@@ -8,11 +10,21 @@ export const Route = createFileRoute('/products/$productId')({
 
 function ProductDetailComponent() {
   const { productId } = Route.useParams();
+  const agregarAlCarrito = useCartStore((state) => state.addToCart);
+  const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => productsApi.getById(Number(productId)),
   });
+
+  const handleAgregar = () => {
+    if (product) {
+      agregarAlCarrito(product);
+      setMostrarConfirmacion(true);
+      setTimeout(() => setMostrarConfirmacion(false), 1500);
+    }
+  };
   
   if (isLoading) {
     return (
@@ -73,13 +85,14 @@ function ProductDetailComponent() {
           </p>
           
           <button
-            onClick={() => {
-              // TODO: Los alumnos deben implementar esta funcionalidad
-              alert('Esta funcionalidad debe ser implementada');
-            }}
-            className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg"
+            onClick={handleAgregar}
+            className={`w-full py-4 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl text-lg ${
+              mostrarConfirmacion
+                ? 'bg-green-500 text-white'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
           >
-            Agregar al Carrito
+            {mostrarConfirmacion ? '✓ Agregado al carrito' : 'Agregar al Carrito'}
           </button>
         </div>
       </div>
