@@ -15,18 +15,39 @@ function App() {
 
   const [filter, setFilter] = useState<"todas" | "completadas" | "pendientes">("todas");
 
+  // Función para eliminar una tarea
   const deleteTask = (id: number) => {
     setTasks(tasks.filter((t) => t.id !== id));
   };
 
+  // Función para alternar el estado de completada
   const toggleTask = (id: number) => {
-    // TODO: cambiar el valor de completed de la tarea con ese id
+    setTasks(tareasPrevias => 
+      tareasPrevias.map(tarea => 
+        tarea.id === id 
+          ? { ...tarea, completed: !tarea.completed } 
+          : tarea
+      )
+    );
   };
 
+  // Función para agregar una nueva tarea
   const addTask = (title: string, priority: "baja" | "media" | "alta") => {
-    // TODO: agregar una nueva tarea con un id incremental
+    const siguienteId = tasks.length > 0 
+      ? Math.max(...tasks.map(t => t.id)) + 1 
+      : 1;
+    
+    const nuevaTarea: Task = {
+      id: siguienteId,
+      title,
+      priority,
+      completed: false,
+    };
+
+    setTasks(prevTasks => [...prevTasks, nuevaTarea]);
   };
 
+  // Filtrar tareas según el filtro seleccionado
   const filteredTasks = tasks.filter((task) => {
     if (filter === "completadas") return task.completed;
     if (filter === "pendientes") return !task.completed;

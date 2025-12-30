@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 
 function Header() {
@@ -9,37 +10,77 @@ function Header() {
 }
 
 function Juego({ maximo }) {
-  // TODO: Crear estados con useState para:
-  // - numeroJugador (el número que ingresa el jugador)
-  // - numeroMaquina (el número aleatorio generado)
-  // - resultado (el mensaje de resultado)
-  // - esCorrecto (booleano para indicar si adivinó o no)
+  // Estados del juego
+  const [valorIngresado, setValorIngresado] = useState('');
+  const [numeroSecreto, setNumeroSecreto] = useState(() => 
+    Math.floor(Math.random() * maximo) + 1
+  );
+  const [mensaje, setMensaje] = useState('');
+  const [gano, setGano] = useState(false);
+  const [intentos, setIntentos] = useState(0);
 
-  // TODO: Crear una función para manejar el cambio del input (actualizar numeroJugador)
-  // Pista: usa e.target.value y recuerda convertirlo a número.
+  // Manejar cambio en el input
+  const actualizarValor = (evento) => {
+    const valor = evento.target.value;
+    setValorIngresado(valor);
+  };
 
-  // TODO: Crear una función para verificar el número
-  // - Si el número del jugador es igual al número aleatorio => mostrar mensaje de acierto
-  // - Si no => mostrar mensaje de error
-  // - Siempre generar un nuevo número aleatorio con Math.floor(Math.random() * maximo) + 1
+  // Verificar si adivinó
+  const comprobar = () => {
+    const numeroUsuario = Number(valorIngresado);
+    setIntentos(prev => prev + 1);
+    
+    if (numeroUsuario === numeroSecreto) {
+      setMensaje(`🎉 ¡Excelente! Adivinaste en ${intentos + 1} intento${intentos > 0 ? 's' : ''}!`);
+      setGano(true);
+    } else {
+      const pista = numeroUsuario > numeroSecreto ? 'más bajo' : 'más alto';
+      setMensaje(`❌ Incorrecto. El número es ${pista}. ¡Sigue intentando!`);
+      setNumeroSecreto(Math.floor(Math.random() * maximo) + 1);
+    }
+  };
+
+  // Reiniciar juego
+  const reiniciar = () => {
+    setValorIngresado('');
+    setNumeroSecreto(Math.floor(Math.random() * maximo) + 1);
+    setMensaje('');
+    setGano(false);
+    setIntentos(0);
+  };
 
   return (
     <div>
-      <form>
-        {/* TODO: Input controlado para ingresar el número */}
+      <form onSubmit={(e) => e.preventDefault()}>
         <input
           type="number"
           min="1"
           max={maximo}
-          placeholder="Ingresa un número del 1 al 10"
+          value={valorIngresado}
+          onChange={actualizarValor}
+          placeholder={`Elige un número del 1 al ${maximo}`}
+          disabled={gano}
         />
-        <button type="button">Adivinar</button>
+        {!gano ? (
+          <button type="button" onClick={comprobar} disabled={!valorIngresado}>
+            Adivinar
+          </button>
+        ) : (
+          <button type="button" onClick={reiniciar}>
+            Jugar de nuevo
+          </button>
+        )}
       </form>
 
-      {/* TODO: Mostrar el resultado con una clase dinámica si adivinó */}
-      <div className="resultado">
-        {/* Mostrar el mensaje del resultado aquí */}
+      <div className={`resultado ${gano ? 'correcto' : ''}`}>
+        {mensaje}
       </div>
+
+      {intentos > 0 && (
+        <p style={{ marginTop: '10px', color: '#666' }}>
+          Intentos realizados: {intentos}
+        </p>
+      )}
     </div>
   );
 }
@@ -55,4 +96,3 @@ function App() {
 }
 
 export default App;
-
