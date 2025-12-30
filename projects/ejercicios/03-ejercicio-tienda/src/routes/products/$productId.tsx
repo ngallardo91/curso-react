@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { productsApi } from '../../services/api';
 import { useCartStore } from '../../store/cartStore';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { ErrorMessage } from '../../components/ErrorMessage';
 
 export const Route = createFileRoute('/products/$productId')({
   component: ProductDetailComponent,
@@ -12,25 +14,17 @@ function ProductDetailComponent() {
   const { productId } = Route.useParams();
   const addToCart = useCartStore((state) => state.addToCart);
   
-  const { data: product, isLoading, error } = useQuery({
+  const { data: product, isLoading, error, refetch } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => productsApi.getById(Number(productId)),
   });
   
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-xl text-gray-600">Cargando producto...</div>
-      </div>
-    );
+    return <LoadingSpinner message="Cargando producto..." />;
   }
   
   if (error || !product) {
-    return (
-      <div className="text-center text-red-600 py-8">
-        Error al cargar el producto
-      </div>
-    );
+    return <ErrorMessage title="Error al cargar el producto" message="No pudimos cargar este producto. Por favor intenta de nuevo." onRetry={() => refetch()} />;
   }
   
   return (

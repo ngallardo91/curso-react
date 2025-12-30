@@ -1,8 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '../../services/api';
-import { useCartStore } from '../../store/cartStore';
 import { ProductCard } from '../../components/ProductCard';
+import { ErrorMessage } from '../../components/ErrorMessage';
+import { ProductSkeleton } from '../../components/ProductSkeleton';
 
 
 export const Route = createFileRoute('/categories/$category')({
@@ -11,15 +12,35 @@ export const Route = createFileRoute('/categories/$category')({
 
 function CategoryProductsComponent() {
   const { category } = Route.useParams();
-  const addToCart = useCartStore((state) => state.addToCart);
   
-  const { data: products, isLoading } = useQuery({
+  const { data: products, isLoading, error, refetch } = useQuery({
     queryKey: ['products', 'category', category],
     queryFn: () => productsApi.getByCategory(category),
   });
   
   if (isLoading) {
-    return <div className="text-center py-8">Cargando productos...</div>;
+    return (
+      <div>
+        <a
+          href="/categories"
+          className="text-blue-600 hover:text-blue-700 mb-6 inline-block"
+        >
+          ← Volver a categorías
+        </a>
+        <h1 className="text-3xl font-bold text-gray-900 mb-6 capitalize">
+          {category}
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <ProductSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return <ErrorMessage title={`Error al cargar ${category}`} message="No pudimos cargar los productos de esta categoría." onRetry={() => refetch()} />;
   }
   
   return (
